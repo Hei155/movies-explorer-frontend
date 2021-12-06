@@ -1,0 +1,160 @@
+.header {
+    margin: 0 auto;
+    height: 74px;
+    width: calc(100% - 140px);
+    max-width: 1140px;
+}
+
+.header__registration {
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    margin-top: 29px;
+    margin-right: 30px;
+    transition: opacity ease-in-out .3s;
+}
+
+.header__registration:hover {
+    opacity: .7;
+}
+
+.header__link {
+    margin-top: 18px;
+    width: 38px;
+    height: 38px;
+    transition: transform ease-in-out .3s;
+}
+
+.header__link:hover {
+    transform: scale(1.3, 1.3)
+}
+
+.header__movies {
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 18px;
+    margin-right: 50px;
+    color: #FFFFFF;
+    margin-top: 28px;
+    transition: opacity ease-in-out .3s;
+}
+
+.header__movies:hover {
+    opacity: .7;
+}
+
+.header__movies:first-of-type {
+    margin-right: 20px;
+}
+
+.header__profile {
+    display: flex;
+}
+
+.header__profile-link {
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 16px;
+    color: #FFFFFF;
+    margin-top: 28px;
+    margin-right: 17px;
+    transition: opacity ease-in-out .3s;
+}
+
+.header__profile-link:hover {
+    opacity: .7;
+}
+
+.header__profile-container {
+    height: 30px;
+    background: #313131;
+    border-radius: 4px;
+    height: 30px;
+    width: 26.5px;
+    margin-top: 21px;
+}
+
+.header__sidebar {
+    cursor: pointer;
+    padding: 0;
+    border: none;
+    width: 44px;
+    height: 44px;
+    margin-top: 15px;
+    background: url('../../images/SideBar.svg');
+    display: none;
+}
+
+.header__navigation {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header__profile-pic {
+    margin-top: 8px;
+    margin-left: 7.25px;
+}
+
+.header__login {
+    margin-top: 21px;
+    text-decoration: none;
+    color: #000000;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    width: 76px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border: none;
+    border-radius: 3px;
+    background: #3DDC84;
+    cursor: pointer;
+    transition: opacity ease-in-out .3s;
+}
+
+.header__login:hover {
+    opacity: .7;
+}
+
+.header__link-container {
+    margin-top: 21px;
+}
+
+@media screen and (max-width: 1000px) {
+    .header {
+        width: calc(100% - 60px);
+    }
+}
+
+@media screen and (max-width: 909px) {
+    .header__profile {
+        display: none;
+    }
+    .header__sidebar {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .header {
+        width: calc(100% - 28px);
+    }
+
+    .header__registration {
+        font-size: 10px;
+        margin-right: 14px;
+    }
+
+    .header__login {
+        font-size: 10px;
+    }
+
+    .header__link-container {
+        margin-top: 24px;
+        margin-right: 14px;
+    }
+}

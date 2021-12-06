@@ -1,0 +1,143 @@
+.techs {
+    background: #272727;
+    padding-bottom: 100px;
+}
+
+.techs__text {
+    width: calc(100% - 140px);
+    max-width: 1140px;
+    margin: 0 auto;
+    padding-top: 110px;
+    padding-bottom: 23px;
+    border-bottom: 1px solid #DADADA;;
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 27px;
+    color: #FFFFFF;
+}
+
+.techs__title {
+    margin: 0;
+    margin-top: 90px;
+    color: #FFFFFF;
+    font-weight: normal;
+    font-size: 50px;
+    line-height: 58px;
+    text-align: center;
+}
+
+.techs__subtitle {
+    margin: 0 auto;
+    margin-top: 26px;
+    margin-bottom: 100px;
+    max-width: 460px;
+    letter-spacing: -0.04em;
+    color: #FFFFFF;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+}
+
+.techs__about {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    border: none;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.techs__button {
+    border: none;
+    padding: 0;
+    color: #FFFFFF;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.04em;
+    text-align: center;
+    background: #303030;
+    border-radius: 10px;
+    width: 90px;
+    height: 60px;
+    cursor: pointer;
+    transition: transform ease-in-out .3s;
+}
+
+.techs__button:hover {
+    transform: scale(1.1, 1.1);
+}
+
+@media screen and (max-width: 1000px) {
+    .techs {
+        padding-bottom: 90px;
+    }
+
+    .techs__text {
+        padding-top: 90px;
+        width: calc(100% - 100px);
+    }
+
+    .techs__title {
+        margin-top: 80px;
+    }
+
+    .techs__subtitle {
+        margin-top: 22px;
+        margin-bottom: 83px;
+        font-size: 12px;
+        line-height: 18px;
+    }
+
+    .techs__button {
+        width: 84px;
+        height: 57px;
+        font-size: 12px;
+        line-height: 15px;
+    }   
+}
+
+@media screen and (max-width: 736px) {
+    .techs__about {
+        flex-wrap: wrap;
+        margin: 0 auto;
+        max-width: calc(100% - 100px);
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .techs {
+        background: #202020;
+        padding-bottom: 70px;
+    }
+
+    .techs__text {
+        padding-top: 70px;
+        padding-bottom: 28px;
+        width: calc(100% - 36px);
+        font-size: 18px;
+        line-height: 22px;
+    }
+
+    .techs__title {
+        margin-top: 60px;
+        font-size: 30px;
+        line-height: 36px;
+    }
+
+    .techs__subtitle {
+        margin: 24px auto 50px;
+        width: calc(100% - 28px);
+    }
+    .techs__about {
+        width: calc(100% - 142px);
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .techs__about {
+        justify-content: flex-start;
+    }
+}

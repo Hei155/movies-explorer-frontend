@@ -1,0 +1,117 @@
+.portfolio {
+    width: calc(100% - 140px);
+    max-width: 1140px;
+    margin: 0 auto;
+}
+
+.portfolio__text {
+    margin: 100px 0 50px 0;
+    color: #8B8B8B;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+.portfolio__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.portfolio__link {
+    text-decoration: none;
+    color: #FFFFFF;
+    letter-spacing: -0.04em;
+    font-weight: normal;
+    font-size: 30px;
+    line-height: 50px;
+    transition: opacity ease-in-out .3s,;
+}
+
+.portfolio__link:hover {
+    opacity: .7;
+}
+
+.portfolio__pointer {
+    width: 29px;
+    height: 60px;
+}
+
+.portfolio__pointer-link {
+    transition: transform ease-in-out .3s,
+                opacity ease-in-out .3s;
+}
+
+.portfolio__pointer-link:hover {
+    transform: rotate(45deg);
+    opacity: .7;
+}
+
+.portfolio__paragraph {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 19px;
+    border-bottom: 1px solid #424242;
+}
+
+.portfolio__paragraph:not(:first-child) {
+    margin-top: 20px;
+}
+
+.portfolio__paragraph:last-child {
+    padding-bottom: 125px;
+    border: none;
+}
+
+@media screen and (max-width: 1000px) {
+    .portfolio {
+        width: calc(100% - 100px);
+    }
+
+    .portfolio__text {
+        margin: 91px 0 50px 0;
+    }
+
+    .portfolio__link {
+        font-size: 28px;
+    }
+
+    .portfolio__paragraph:last-child {
+        padding-bottom: 90px;
+    }
+
+    .portfolio__pointer {
+        width: 27px;
+        height: 60px;
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .portfolio {
+        width: calc(100% - 28px);
+    }
+
+    .portfolio__text {
+        font-size: 14px;
+        line-height: 20px;
+        margin: 69px 0 40px 0;
+    }
+
+    .portfolio__link {
+        font-size: 18px;
+        line-height: 28px;
+    }
+    
+    .portfolio__pointer {
+        width: 18px;
+        height: 28px;
+    }
+    
+    .portfolio__paragraph {
+        border-bottom: 1px solid #E6E6E6;
+    }
+
+    .portfolio__paragraph:last-child {
+        padding-bottom: 70px;
+    }
+}

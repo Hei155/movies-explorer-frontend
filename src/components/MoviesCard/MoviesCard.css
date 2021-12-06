@@ -1,0 +1,53 @@
+.card {
+    background: #222222;
+}
+
+.card_hidden {
+    display: none;
+}
+
+.card__container {
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 24px);
+    margin: 0 auto;
+    padding-top: 14px;
+}
+
+.card__about {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 16px;
+    color: #FFFFFF;
+    margin: 0;
+    padding-bottom: 10px;
+}
+
+.card__toggle {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+    background-image: url(../../images/ToggleBtn.svg);
+    background-color: #222222;
+    transition: background-image ease-in-out .4s;
+    cursor: pointer;
+}
+
+.card__toggle_active {
+    background-image: url(../../images/ToggleBtnActive.svg);
+}
+
+.card__duration {
+    font-size: 11px;
+    line-height: 13px;
+    color: #8B8B8B;
+    margin: 0;
+    padding-bottom: 14px;
+    margin-left: 12px;
+}
+
+.card__image {
+    width: 100%;
+    display: block;
+}
