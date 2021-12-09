@@ -2,12 +2,12 @@
     font-family: 'Inter';
     font-style: normal;
     font-weight: 400;
-    src: url(../fonts/Inter/Inter-Regular.otf) format("otf");
+    src: url(../fonts/Inter/Inter-Regular.woff) format("woff");
 }
 
 @font-face {
     font-family: 'Inter';
     font-style: normal;
     font-weight: 500;
-    src: url(../fonts/Inter/Inter-Medium.otf) format("otf");
+    src: url(../fonts/Inter/Inter-Medium.woff) format("woff");
 }
