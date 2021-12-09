@@ -3,7 +3,7 @@ export function SearchForm() {
         <div className="searchcontainer">
             <form className="searchcontainer__form">
                 <label className="searchcontainer__field">
-                    <input className="searchcontainer__input" placeholder="Фильм" type="search"></input>
+                    <input className="searchcontainer__input" placeholder="Фильм" type="text" required></input>
                 </label>
             <button className="searchcontainer__button"></button>
             </form>

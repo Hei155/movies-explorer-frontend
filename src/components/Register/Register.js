@@ -10,8 +10,9 @@ export function Register() {
             path="/signin"
         >
             <label className="register__field">
-            <span className="register__text">Имя</span>
-            <input className="register__input" name="name" type="text"/>
+                <span className="register__text">Имя</span>
+                <input className="register__input" name="name" type="text" required/>
+                <span className="register__error"></span>
             </label>
         </AuthFrame>
     )

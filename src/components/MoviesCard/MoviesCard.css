@@ -23,7 +23,7 @@
     padding-bottom: 10px;
 }
 
-.card__toggle {
+.toggle__select {
     width: 16px;
     height: 16px;
     padding: 0;
@@ -34,12 +34,22 @@
     cursor: pointer;
 }
 
-.card__toggle_active {
+.toggle__select_active {
     background-image: url(../../images/ToggleBtnActive.svg);
+}
+
+.toggle__select_delete {
+    background-image: url(../../images/BtnDelete.svg);
+    transition: transform ease-in-out .4s;
+}
+
+.toggle__select_delete:hover {
+    transform: scale(1.2, 1.2);
 }
 
 .card__duration {
     font-size: 11px;
+
     line-height: 13px;
     color: #8B8B8B;
     margin: 0;

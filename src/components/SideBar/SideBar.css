@@ -25,6 +25,7 @@
     position: relative;
     width: calc(100% - 248px);
     margin-left: auto;
+    background: #202020;
 }
 
 .sidebar_open > .sidebar__container {
@@ -68,6 +69,10 @@
 
 .sidebar__elem {
     margin-bottom: 28px;
+}
+
+.sidebar__elem:nth-of-type(2) {
+    margin-bottom: 22px;
 }
 
 .sidebar__elem:last-of-type {
@@ -121,4 +126,36 @@
 .sidebar__profile-pic {
     margin-left: 7.25px;
     margin-top: 8px;
+}
+
+@media screen and (max-width: 560px) {
+    .sidebar__container {
+        width: 100%;
+    }
+
+    .sidebar__nav {
+        padding-top: 144px;
+    }
+
+    .sidebar__close {
+        top: 13.44px;
+        right: 13.44px;
+    }
+
+    .sidebar__elem  {
+        margin-bottom: 24px;
+    }
+
+    .sidebar__elem:nth-of-type(2) {
+        padding-bottom: 7px;
+        margin-bottom: 15px;
+    }
+
+    .sidebar__list {
+        padding-bottom: 444px;
+    }
+
+    .sidebar__profile-container {
+        padding-bottom: 48px;
+    }
 }

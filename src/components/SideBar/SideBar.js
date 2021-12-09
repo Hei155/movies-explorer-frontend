@@ -3,9 +3,9 @@ import profilePic from '../../images/ProfilePic.svg';
 
 export function SideBar(props) {
     return (
-        <section className={props.isOpen ? "sidebar sidebar_open" : "sidebar"}>
+        <aside className={props.isOpen ? "sidebar sidebar_open" : "sidebar"}>
             <div className="sidebar__container">
-                <button className="sidebar__close"/>
+                <button className="sidebar__close" onClick={props.closeSideBar}/>
                 <nav className="sidebar__nav">
                     <ul className="sidebar__list">
                         <li className="sidebar__elem"><Link className="sidebar__link sidebar__return" to="/">Главная</Link></li>
@@ -18,6 +18,6 @@ export function SideBar(props) {
                     </div>
                 </nav>
             </div>
-        </section>
+        </aside>
     )
 }

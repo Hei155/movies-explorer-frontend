@@ -54,6 +54,7 @@
 
 .searchcontainer__toggle-text {
     display: block;
+    width: 117px;
     font-weight: normal;
     font-size: 13px;
     line-height: 18px;
@@ -96,7 +97,7 @@
 
 @media screen and (max-width: 909px) {
     .searchcontainer {
-        padding-bottom: 131px;
+        padding-bottom: 61px;
     }
 
     .searchcontainer__toggle {
@@ -124,10 +125,13 @@
 @media screen and (max-width: 560px) {
     .searchcontainer {
         width: calc(100% - 8px);
+        padding-bottom: 51px;
     }
 
     .searchcontainer__params {
         padding-top: 41px;
+        display: flex;
+        justify-content: center;
     }
 
     .searchcontainer__input {
@@ -140,6 +144,8 @@
     }
 
     .searchcontainer__toggle-text {
+        padding: 0;
+        padding-right: 49px;
         font-size: 11px
     }
 }

@@ -1,12 +1,14 @@
 import React from "react";
-import { SearchForm } from "../SearchForm/SearchForm"
-import { SavedMovies } from "../SavedMovies/SavedMovies";
+import { MoviesFrame } from "../MoviesFrame/MoviesFrame";
 
 export function Movies(props) {
-    return (
-        <section className="movies">
-            <SearchForm></SearchForm>
-            <SavedMovies></SavedMovies>
-        </section>
+    return (  
+        <MoviesFrame
+                openSideBar={props.openSideBar}
+                closeSideBar={props.closeSideBar} 
+                isOpen={props.isOpen}
+                data={props.movieList}
+                toggleBtnClass="toggle__select"
+        />
     )
 }
