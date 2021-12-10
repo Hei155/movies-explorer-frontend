@@ -4,7 +4,7 @@ import logo from '../../images/HeaderLogo.svg';
 import profilePic from '../../images/ProfilePic.svg';
 
 export function Header(props) {
-    const [logenIn, setLogenIn] = React.useState(false);
+    const [logenIn, setLogenIn] = React.useState(true);
 
     return (
         <header className="header">
