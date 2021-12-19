@@ -10,6 +10,7 @@
     font-size: 140px;
     line-height: 169px;
     color: white;
+    display: block;
 }
 
 .error__describe {

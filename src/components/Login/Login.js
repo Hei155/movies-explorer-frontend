@@ -1,8 +1,38 @@
+import React from 'react';
 import { AuthFrame } from '../AuthFrame/AuthFrame';
+import UseForm from '../UseForm/UseForm';
 
-export function Login() {
+export function Login(props) {
+    const [btnClassName, setBtnClassName] = React.useState('auth__submit auth__submit_inactive');
+    const [isBtnActive, setBtnActive] = React.useState(false);
+    const { values, handleChange, errors, isValid, resetForm } = UseForm();
+
+    function checkBtn() {
+        if (isValid) {
+            setBtnActive(true);
+            setBtnClassName('auth__submit');
+        } else {
+            setBtnActive(false);
+            setBtnClassName('auth__submit auth__submit_inactive');
+        }
+    }
+
+    function onSubmit(evt) {
+        evt.preventDefault();
+        props.login(values.email, values.password);
+    }
+
+    React.useEffect(() => {
+        checkBtn();
+    }, [values])
+
     return (
-        <AuthFrame 
+        <AuthFrame
+            onSubmit={onSubmit}
+            errors={errors}
+            btnClassName={btnClassName}
+            isBtnActive={isBtnActive}
+            handleChange={handleChange}
             title="Рады видеть!"
             text = "Войти"
             linkText="Ещё не зарегистрированы?"

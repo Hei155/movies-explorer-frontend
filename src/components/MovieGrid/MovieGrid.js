@@ -36,8 +36,8 @@ export function MovieGrid(props) {
 
     const [isVisible, setVisible] = React.useState(true);
 
-    function checkBtnVisible() {
-        if (props.data.length <= maxCards) {
+    function checkBtnVisible(data) {
+        if (data.length <= maxCards) {
             setVisible(true);
         } else {
             setVisible(false);
@@ -45,8 +45,12 @@ export function MovieGrid(props) {
     }
 
     React.useEffect(() => {
-        checkBtnVisible();
-    },[props.data.length, maxCards])
+        if (props.isShort) {
+            checkBtnVisible(props.shortMovies);
+        } else {
+            checkBtnVisible(props.movies)
+        }
+    },[props.movies, props.shortMovies, maxCards, props.isShort])
 
     function extendMovieList() {
         if (isBigger) {
@@ -56,13 +60,17 @@ export function MovieGrid(props) {
         } else if (isSmallWindow || isMobile) {
             setMaxCards(maxCards + 2)
         }
-        checkBtnVisible();
+        if (props.isShort) {
+            checkBtnVisible(props.shortMovies);
+        } else {
+            checkBtnVisible(props.movies)
+        }
     }
 
     return (
         <>
             <div className="movies">
-            <MoviesCardList isFavourite={props.isFavourite}handleClick={props.handleClick} maxCards={maxCards} toggleBtnClass={props.toggleBtnClass} data={props.data} ></MoviesCardList>
+            <MoviesCardList setFavouriteStatus={props.setFavouriteStatus} isShort={props.isShort} isFavourite={props.isFavourite} handleClick={props.handleClick} maxCards={maxCards} toggleBtnClass={props.toggleBtnClass} data={props.data} checkCurrentCards={props.checkCurrentCards}></MoviesCardList>
             </div>
             <button className={isVisible ? "movies__btn movies__btn_hidden" : "movies__btn"} onClick={extendMovieList}>Ещё</button>
         </>

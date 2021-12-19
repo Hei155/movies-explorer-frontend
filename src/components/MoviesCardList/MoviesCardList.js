@@ -13,17 +13,21 @@ export function MoviesCardList(props) {
         return `${Math.floor(durationInMinutes / 60)}ч${durationInMinutes % 60}м`
     }
 
+    function checkCards(i) {
+        if (i > props.maxCards - 1) {
+            return 'card_hidden';
+        } else {                                                                        
+            return 'card';
+        }
+    }
+
     return (
         <> 
-            {props.data.map((movie, i) => {
-                let classMovie;
-                if (i > props.maxCards - 1) {
-                    classMovie = 'card_hidden';
-                } else {                                                                        
-                    classMovie = 'card';
-                }
+            {props.checkCurrentCards().map((movie, i) => {
                 return (
                     <MoviesCard
+                        setFavouriteStatus={props.setFavouriteStatus}
+                        data={movie}
                         isFavourite={props.isFavourite}
                         handleClick={props.handleClick}
                         toggleBtnClass={props.toggleBtnClass}
@@ -31,7 +35,7 @@ export function MoviesCardList(props) {
                         alt={movie.image.alternativeText}
                         text={movie.nameRU}
                         duration={transformDuration(movie.duration)}
-                        class={classMovie}
+                        class={checkCards(i)}
                     />
                 )
             })

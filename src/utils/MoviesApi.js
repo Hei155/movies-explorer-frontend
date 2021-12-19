@@ -10,7 +10,8 @@ class MoviesApi {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'authorization': `Bearer ${localStorage.getItem('jwt')}`
             }
         })
         .then((res) => {
@@ -19,38 +20,6 @@ class MoviesApi {
             }
             return res.json();
         })
-    }
-
-    changeFavouriteMovie(isLike) {
-        if (!isLike) {
-            return fetch (`${this._baseUrl}/movies`, {
-                method: 'PUT',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then((res) => {
-                if (!res.ok) {
-                    return Promise.reject(`Error: ${res.status}`);
-                }
-                return res.json();
-            })
-        } else {
-            return fetch (`${this._baseUrl}/movies`, {
-                method: 'DELETE',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then((res) => {
-                if (!res.ok) {
-                    return Promise.reject(`Error: ${res.status}`);
-                }
-                return res.json();
-            })
-        }
     }
 }
 

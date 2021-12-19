@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import logo from '../../images/HeaderLogo.svg';
 import profilePic from '../../images/ProfilePic.svg';
 
+
 export function Header(props) {
     const [logenIn, setLogenIn] = React.useState(true);
 

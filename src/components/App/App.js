@@ -9,6 +9,10 @@ import { Profile } from '../Profile/Profile';
 import { SavedMovies } from '../SavedMovies/SavedMovies';
 import { NotFound } from '../NotFound/NotFound';
 import movieApi from '../../utils/MoviesApi';
+import mainApi from '../../utils/MainApi';
+import auth from '../../utils/Auth';
+import { ProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
+import { CurrentUserContext } from '../../contexts/currentUserContext';
 
 function App() {
   const [isOpen , setOpen] = React.useState(false);
@@ -16,6 +20,8 @@ function App() {
   const [movieSavedList, setMovieSavedList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isFavourite, setFavourite] = React.useState(false);
+  const [isLoginIn, setIsLoginIn] = React.useState(false);
+  const [currentUser, setCurrentUser] = React.useState({});
   const location = useLocation();
 
   function getMovies() {
@@ -30,15 +36,34 @@ function App() {
       })
   }
   
-  function changeFavouriteStatus() {
-    movieApi.changeFavouriteMovie(isFavourite)
-      .then((res) => {
-        console.log(res)
-        setFavourite(true)
+  function setFavouriteStatus(data) {
+    mainApi.setFavouriteMovie(data)
+    .catch((err) => console.log(err))
+  }
+
+  function register(name, email, password) {
+    auth.register(name, email, password)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err))
+  }
+
+  function login(email, password) {
+    auth.authorize(email, password)
+      .then(() => {
+        setIsLoginIn(true);
       })
-      .catch((err) => {
-        console.log(err)
-      })
+      .catch((err) => console.log(err))
+  }
+
+  function checkToken() {
+    if (localStorage.getItem('jwt')) {
+      const jwt = localStorage.getItem('jwt');
+      auth.checkToken(jwt)
+        .then(() => {
+          setIsLoginIn(true);
+        })
+        .catch((err) => console.log(err))
+    }
   }
   
   React.useEffect(() => {
@@ -67,19 +92,47 @@ function App() {
   }
 
   return (
-    <div className="page">
-      <Routes>
-        <Route path="*" element={<NotFound/>}/>
-        <Route path="/" element={<Main openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>}/>
-        <Route path="/signup" element={<Register />}/>
-        <Route path="/signin" element={<Login />}/>
-        <Route path="/profile" element={<Profile openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>
-        }/>
-        <Route path="/movies" element={<Movies isFavourite={isFavourite} handleClick={changeFavouriteStatus} isLoading={isLoading} movieList={movieList} openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>
-        }/>
-        <Route path="/saved-movies" element={<SavedMovies movieSavedList={movieSavedList} openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>}/>
-      </Routes>
-    </div>
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="page">
+        <Routes>
+          <Route path="*" element={<NotFound code="404" text='Ничего не найдено'/>}/>
+          <Route path="/" element={<Main openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>}/>
+          <Route path="/signup" element={<Register register={register}/>}/>
+          <Route path="/signin" element={<Login login={login}/>}/>
+          <Route
+            isLoginIn={isLoginIn}
+            path="/profile" 
+            component={Profile}
+            openSideBar={openSideBar}
+            closeSideBar={closeSideBar}
+            isOpen={isOpen}
+          />
+          <Route
+            isLoginIn={isLoginIn}
+            path="/movies" 
+            element={ProtectedRoute}
+          >
+            <Route
+              setFavouriteStatus={setFavouriteStatus} 
+              isFavourite={isFavourite} 
+              isLoading={isLoading} 
+              movieList={movieList} 
+              openSideBar={openSideBar} 
+              closeSideBar={closeSideBar} 
+              isOpen={isOpen}
+            />
+          </Route> 
+          <Route
+            isLoginIn={isLoginIn}
+            path="/saved-movies"
+            movieSavedList={movieSavedList} 
+            openSideBar={openSideBar} 
+            closeSideBar={closeSideBar} 
+            isOpen={isOpen}
+          />
+        </Routes>
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 
