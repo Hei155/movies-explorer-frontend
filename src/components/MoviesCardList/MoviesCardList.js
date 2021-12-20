@@ -26,6 +26,7 @@ export function MoviesCardList(props) {
             {props.checkCurrentCards().map((movie, i) => {
                 return (
                     <MoviesCard
+                        key={i}
                         setFavouriteStatus={props.setFavouriteStatus}
                         data={movie}
                         isFavourite={props.isFavourite}

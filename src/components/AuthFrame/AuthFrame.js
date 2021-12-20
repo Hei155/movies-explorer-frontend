@@ -21,7 +21,7 @@ export function AuthFrame(props) {
                         <span className="auth__error">{props.errors.email || props.errors.password}</span>
                     </label>
                 </div>
-                <button disabled={props.isBtnActive ? '' : 'true'} className={props.btnClassName} type="submit">{props.text}</button>
+                <button disabled={props.isBtnActive ? '' : true} className={props.btnClassName} type="submit">{props.text}</button>
             </form>
             <p className="auth__link">{props.linkText} <Link className="register__login-link" to={props.path}>{props.link}</Link></p>
         </section>

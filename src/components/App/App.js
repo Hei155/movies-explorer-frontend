@@ -60,6 +60,7 @@ function App() {
       const jwt = localStorage.getItem('jwt');
       auth.checkToken(jwt)
         .then(() => {
+          console.log('токен есть')
           setIsLoginIn(true);
         })
         .catch((err) => console.log(err))
@@ -91,6 +92,10 @@ function App() {
     setOpen(false)
   }
 
+  React.useEffect(() => {
+    checkToken();
+  }, [window.location])
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
@@ -100,35 +105,54 @@ function App() {
           <Route path="/signup" element={<Register register={register}/>}/>
           <Route path="/signin" element={<Login login={login}/>}/>
           <Route
-            isLoginIn={isLoginIn}
-            path="/profile" 
-            component={Profile}
-            openSideBar={openSideBar}
-            closeSideBar={closeSideBar}
-            isOpen={isOpen}
+            path="/profile"
+            element={
+              <ProtectedRoute
+                isLoginIn={isLoginIn}
+                children={
+                  isLoginIn && <Profile
+                    openSideBar={openSideBar}
+                    closeSideBar={closeSideBar}
+                    isOpen={isOpen}
+                  />
+                }
+              />
+            }
           />
           <Route
-            isLoginIn={isLoginIn}
             path="/movies" 
-            element={ProtectedRoute}
-          >
-            <Route
-              setFavouriteStatus={setFavouriteStatus} 
-              isFavourite={isFavourite} 
-              isLoading={isLoading} 
-              movieList={movieList} 
-              openSideBar={openSideBar} 
-              closeSideBar={closeSideBar} 
-              isOpen={isOpen}
-            />
-          </Route> 
+            element={
+              <ProtectedRoute
+                isLoginIn={isLoginIn}
+                children={
+                  isLoginIn && <Movies
+                    setFavouriteStatus={setFavouriteStatus} 
+                    isFavourite={isFavourite} 
+                    isLoading={isLoading} 
+                    movieList={movieList} 
+                    openSideBar={openSideBar} 
+                    closeSideBar={closeSideBar} 
+                    isOpen={isOpen}
+                  />
+                }
+              />
+            }
+          />
           <Route
-            isLoginIn={isLoginIn}
             path="/saved-movies"
-            movieSavedList={movieSavedList} 
-            openSideBar={openSideBar} 
-            closeSideBar={closeSideBar} 
-            isOpen={isOpen}
+            element={
+              <ProtectedRoute
+                isLoginIn={isLoginIn}
+                children={
+                  isLoginIn && <SavedMovies 
+                    movieSavedList={movieSavedList} 
+                    openSideBar={openSideBar} 
+                    closeSideBar={closeSideBar} 
+                    isOpen={isOpen}
+                  />
+                }
+              />
+            }
           />
         </Routes>
       </div>
