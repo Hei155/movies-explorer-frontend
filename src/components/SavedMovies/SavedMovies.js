@@ -7,6 +7,7 @@ export function SavedMovies(props) {
             deleteFavouriteMovie={props.deleteFavouriteMovie}
             movieSavedList={props.movieSavedList}
             isLoginIn={props.isLoginIn}
+            isLoading={props.isLoading}
             openSideBar={props.openSideBar}
             closeSideBar={props.closeSideBar} 
             isOpen={props.isOpen}

@@ -75,8 +75,7 @@ export function MoviesFrame(props) {
         } else {
             setIsEmpty(false)
         }
-        console.log(isEmpty)
-    }, [shortMovies, movies])
+    }, [shortMovies, movies, isShort])
 
     return (
         props.isLoading ?

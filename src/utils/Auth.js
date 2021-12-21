@@ -20,6 +20,21 @@ export class Auth {
         .then((res) => this._handleResponse(res))
     }
 
+    updateUser(email, name) {
+        return fetch(`${mainApiBaseUrl}/users/me`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': `Bearer ${localStorage.getItem('jwt')}`
+            },
+            body: JSON.stringify({
+                email: email,
+                name: name,
+            })
+        })
+        .then(res => this._handleResponse(res))
+    }
+
     authorize(email, password) {
         return fetch(`${mainApiBaseUrl}/signin`, {
             method: 'POST',

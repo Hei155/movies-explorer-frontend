@@ -14,23 +14,32 @@ import auth from '../../utils/Auth';
 import { ProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../../contexts/currentUserContext';
 import { useNavigate } from 'react-router-dom';
+import { movieMap } from '../../utils/movieHelper';
 
 function App() {
   const [isOpen , setOpen] = React.useState(false);
   const [movieList, setMovieList] = React.useState([]);
   const [movieSavedList, setMovieSavedList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [isFavourite, setFavourite] = React.useState(false);
-  const [isLoginIn, setIsLoginIn] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
   const location = useLocation();
   const navigate = useNavigate();
+
+  function checkIsLogin() {
+    if (localStorage.getItem('jwt')) {
+      return true;
+    }
+    return false;
+  }
+  const [isLoginIn, setIsLoginIn] = React.useState(checkIsLogin());
 
   function getMovies() {
     setIsLoading(true);
     movieApi.getAllMovies()
       .then((res) => {
-        setMovieList(res);
+        const movieDefault = movieMap(res);
+        setMovieList(movieDefault);
+        localStorage.setItem('movies', JSON.stringify(movieDefault));
         setIsLoading(false);
       })
       .catch((err) => {
@@ -42,8 +51,8 @@ function App() {
     setIsLoading(true);
     mainApi.getFavouritesMovie()
       .then((res) => {
-        console.log(res)
         setMovieSavedList(res);
+        localStorage.setItem('savedMovies', JSON.stringify(res));
         setIsLoading(false);
       })
       .catch(err => console.log(err))
@@ -51,12 +60,17 @@ function App() {
   
   function setFavouriteStatus(data) {
     mainApi.setFavouriteMovie(data)
-    .then(res => console.log(res))
+    .then(() => {
+      localStorage.setItem('savedMovies', JSON.stringify([...movieSavedList, data]));
+    })
     .catch((err) => console.log(err))
   }
 
-  function deleteFavouriteMovie(id) {
+  function deleteFavouriteMovie(card, id) {
     mainApi.deleteFavouriteMovie(id)
+      .then(() => {
+        setMovieSavedList([...movieSavedList].filter(movie => !(movie.movieId === card.movieId)))
+      })
       .catch(err => console.log(err))
   }
 
@@ -77,12 +91,16 @@ function App() {
       .catch((err) => console.log(err))
   }
 
+  function updateUserInfo(email, name) {
+    auth.updateUser(email, name)
+    .catch(err => console.log(err))
+  }
+
   function checkToken() {
     if (localStorage.getItem('jwt')) {
       const jwt = localStorage.getItem('jwt');
       auth.checkToken(jwt)
         .then(() => {
-          console.log('токен есть')
           setIsLoginIn(true);
         })
         .catch((err) => console.log(err))
@@ -96,14 +114,6 @@ function App() {
       })
       .catch(err => console.log(err))
   }
-  
-  React.useEffect(() => {
-    if (location.pathname === '/movies') {
-      getMovies();
-    } else if (location.pathname === '/saved-movies') {
-      getSavedMovies();
-    }
-    },[location.pathname])
 
   function openSideBar() {
     setOpen(true);
@@ -114,13 +124,29 @@ function App() {
   }
 
   React.useEffect(() => {
-    getCurrentUser()
-  }, [])
+    if (location.pathname === '/movies' || location.pathname === '/saved-movies') {
+      if (localStorage.getItem('movies') && JSON.parse(localStorage.getItem('movies')).length === movieList.length) {
+        setMovieList(JSON.parse(localStorage.getItem('movies')));
+      } else {
+        getMovies();
+      }
+      if (localStorage.getItem('savedMovies') && JSON.parse(localStorage.getItem('savedMovies')).length === movieSavedList.length) {
+        setMovieSavedList(JSON.parse(localStorage.getItem('savedMovies')));
+      } else {
+        getSavedMovies();
+      }
+    }
+    },[location.pathname])
+
+  React.useEffect(() => {
+    if (location.pathname === '/profile') {
+      getCurrentUser();
+    }
+  }, [location.pathname])
 
   React.useEffect(() => {
     checkToken();
-    console.log(localStorage.getItem('jwt'))
-  }, [isLoginIn, currentUser])
+  }, [])
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -137,6 +163,7 @@ function App() {
                 isLoginIn={isLoginIn}
                 children={
                   isLoginIn && <Profile
+                    updateUserInfo={updateUserInfo}
                     isLoginIn={isLoginIn}
                     openSideBar={openSideBar}
                     closeSideBar={closeSideBar}
@@ -156,12 +183,11 @@ function App() {
                   isLoginIn && <Movies
                     deleteFavouriteMovie={deleteFavouriteMovie}
                     setFavouriteStatus={setFavouriteStatus} 
-                    isFavourite={isFavourite} 
-                    isLoading={isLoading} 
                     movieList={movieList}
                     movieSavedList={movieSavedList}
                     openSideBar={openSideBar} 
                     closeSideBar={closeSideBar} 
+                    isLoading={isLoading} 
                     isOpen={isOpen}
                     isLoginIn={isLoginIn}
                   />
@@ -180,6 +206,7 @@ function App() {
                     movieSavedList={movieSavedList} 
                     openSideBar={openSideBar} 
                     closeSideBar={closeSideBar} 
+                    isLoading={isLoading}
                     isOpen={isOpen}
                     isLoginIn={isLoginIn}
                   />
