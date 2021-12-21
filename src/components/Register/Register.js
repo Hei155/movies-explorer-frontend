@@ -5,7 +5,6 @@ import UseForm from '../UseForm/UseForm';
 export function Register(props) {
     const [btnClassName, setBtnClassName] = React.useState('auth__submit auth__submit_inactive');
     const [isBtnActive, setBtnActive] = React.useState(false);
-    const validName = /^[A-Za-z0-9]+([A-Za-z0-9]*|[ _-]?[A-Za-z0-9]+)*$/mg;
     const { values, handleChange, errors, isValid } = UseForm();
 
     function checkBtn() {
@@ -20,7 +19,6 @@ export function Register(props) {
 
     function onSubmit(evt) {
         evt.preventDefault();
-        console.log(typeof(values.email))
         props.register(values.name, values.email, values.password);
     }
 
