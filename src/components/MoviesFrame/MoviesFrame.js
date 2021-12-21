@@ -9,6 +9,7 @@ import { NotFound } from "../NotFound/NotFound";
 
 export function MoviesFrame(props) {
     const [isShort, setShort] = React.useState(false);
+    const [isEmpty, setIsEmpty] = React.useState(false);
     const [movieName, setMovieName] = React.useState('');
     const [movies, setMovies] = React.useState([]);
     const [shortMovies, setShortMovies] = React.useState([]);
@@ -55,13 +56,11 @@ export function MoviesFrame(props) {
     }
 
     React.useEffect(() => {
-
             if (shortMovies) {
                 setShortMovies(props.data.filter((movie) => movie.duration <= 40));
             } else {
                 setMovies(props.data);
             }
-
     }, [movieName])
 
     React.useEffect(() => {
@@ -70,23 +69,31 @@ export function MoviesFrame(props) {
         setIsErrorVisible(false)
     }, [props.data])
 
+    React.useEffect(() => {
+        if ((isShort && shortMovies.length === 0) || movies.length === 0) {
+            setIsEmpty(true)
+        } else {
+            setIsEmpty(false)
+        }
+        console.log(isEmpty)
+    }, [shortMovies, movies])
+
     return (
         props.isLoading ?
         <Preloader/>
         :
-        <>  {movies.length === 0 || shortMovies.length === 0 ?
-            <NotFound text="Ничего не найдено."/>
-            :
-            <>
-                <Header openSideBar={props.openSideBar}/>
+        <>  
+                <Header isLoginIn={props.isLoginIn} openSideBar={props.openSideBar}/>
                 <main className="movie">
                     <SearchForm isErrorVisible={isErrorVisible} toggleShort={toggleShort} handleChange={handleChange} handleSubmit={handleSubmit}/>
-                    <MovieGrid setFavouriteStatus={props.setFavouriteStatus} checkCurrentCards={checkCurrentCards} movies={movies} shortMovies={shortMovies} isShort={isShort} data={props.data} toggleBtnClass={props.toggleBtnClass} handleClick={props.handleClick} isFavourite={props.isFavourite}/>
+                    {isEmpty ?
+                    <NotFound text="Ничего не найдено."/>
+                    :
+                    <MovieGrid deleteFavouriteMovie={props.deleteFavouriteMovie} movieSavedList={props.movieSavedList} setFavouriteStatus={props.setFavouriteStatus} checkCurrentCards={checkCurrentCards} movies={movies} shortMovies={shortMovies} isShort={isShort} data={props.data} toggleBtnClass={props.toggleBtnClass} handleClick={props.handleClick} isFavourite={props.isFavourite}/>
+                    }
                 </main>
                 <Footer/>
                 <SideBar openSideBar={props.openSideBar} closeSideBar={props.closeSideBar} isOpen={props.isOpen}/>
-            </>
-        }
         </>
     )
 }

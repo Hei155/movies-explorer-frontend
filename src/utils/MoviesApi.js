@@ -11,7 +11,6 @@ class MoviesApi {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'authorization': `Bearer ${localStorage.getItem('jwt')}`
             }
         })
         .then((res) => {

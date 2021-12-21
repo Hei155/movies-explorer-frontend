@@ -1,9 +1,19 @@
 import { mainApiBaseUrl } from "./const";
+import { moviesApiBaseUrl} from "./const";
 
 class MainApi {
     constructor(options) {
         this._baseUrl = options.baseUrl;
         this._headers = options.headers;
+        this._moviesApiBaseUrl =  moviesApiBaseUrl;
+    }
+
+    getFavouritesMovie() {
+        return fetch(`${this._baseUrl}/movies`, {
+            method: 'GET',
+            headers: this._headers
+        })
+        .then(res => this._handleResponse(res))
     }
 
     setFavouriteMovie(data) {
@@ -15,13 +25,13 @@ class MainApi {
                     director: data.director,
                     description: data.description,  
                     duration: data.duration,
-                    image: data.image,
-                    trailer: data.trailer,
-                    thumbnail: data.thumbnail,
-                    movieId: data.movieId,
+                    image: `${this._moviesApiBaseUrl}${data.image.url}`,
+                    trailer: data.trailerLink,
+                    thumbnail: `${this._moviesApiBaseUrl}${data.image.formats.thumbnail.url}`,
+                    movieId: data.id,
                     nameRU: data.nameRU,
                     nameEN: data.nameEN,
-                    year: data.year,
+                    year: Number(data.year),
                 }),
             })
             .then((res) => {
@@ -29,14 +39,23 @@ class MainApi {
             })
     }
 
-    deleteFavouriteMovie() {
-        return fetch (`${this._baseUrl}/movies`, {
+    deleteFavouriteMovie(id) {
+        console.log(id)
+        return fetch (`${this._baseUrl}/movies/${id}`, {
             method: 'DELETE',
             headers: this._headers,
         })
         .then((res) => {
             this._handleResponse(res)
         })
+    }
+
+    getUserData() {
+        return fetch(`${this._baseUrl}/users/me`, {
+            method: 'GET',
+            headers: this._headers
+        })
+        .then((res) => this._handleResponse(res));
     }
 
     _handleResponse(res) {
@@ -52,6 +71,7 @@ const mainApi = new MainApi({
     baseUrl: mainApiBaseUrl,
     headers: {
         'authorization': `Bearer ${localStorage.getItem('jwt')}`,
+        'Accept': 'application/json',
         'Content-Type': 'application/json'
     }
 });

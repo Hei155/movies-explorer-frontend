@@ -26,6 +26,8 @@ export function MoviesCardList(props) {
             {props.checkCurrentCards().map((movie, i) => {
                 return (
                     <MoviesCard
+                        deleteFavouriteMovie={props.deleteFavouriteMovie}
+                        isActive={props.movieSavedList.some(i => i.movieId === movie.id)}
                         key={i}
                         setFavouriteStatus={props.setFavouriteStatus}
                         data={movie}

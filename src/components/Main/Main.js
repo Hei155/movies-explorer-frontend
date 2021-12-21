@@ -11,7 +11,7 @@ import { SideBar } from '../SideBar/SideBar';
 export function Main(props) {
     return (
         <>
-            <Header openSideBar={props.openSideBar}/>
+            <Header isLoginIn={props.isLoginIn} openSideBar={props.openSideBar}/>
             <main className="content">
                 <Promo />
                 <AboutProject />

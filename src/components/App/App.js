@@ -13,6 +13,7 @@ import mainApi from '../../utils/MainApi';
 import auth from '../../utils/Auth';
 import { ProtectedRoute } from '../ProtectedRoute/ProtectedRoute';
 import { CurrentUserContext } from '../../contexts/currentUserContext';
+import { useNavigate } from 'react-router-dom';
 
 function App() {
   const [isOpen , setOpen] = React.useState(false);
@@ -23,9 +24,10 @@ function App() {
   const [isLoginIn, setIsLoginIn] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
   const location = useLocation();
+  const navigate = useNavigate();
 
   function getMovies() {
-    setIsLoading(true)
+    setIsLoading(true);
     movieApi.getAllMovies()
       .then((res) => {
         setMovieList(res);
@@ -35,15 +37,33 @@ function App() {
         console.log(err);
       })
   }
+
+  function getSavedMovies() {
+    setIsLoading(true);
+    mainApi.getFavouritesMovie()
+      .then((res) => {
+        setMovieSavedList(res);
+        setIsLoading(false);
+      })
+      .catch(err => console.log(err))
+  }
   
   function setFavouriteStatus(data) {
     mainApi.setFavouriteMovie(data)
+    .then(res => console.log(res))
     .catch((err) => console.log(err))
+  }
+
+  function deleteFavouriteMovie() {
+    mainApi.deleteFavouriteMovie()
+      .catch(err => console.log(err))
   }
 
   function register(name, email, password) {
     auth.register(name, email, password)
-      .then((res) => console.log(res))
+      .then(() => {
+        navigate('/signin');
+      })
       .catch((err) => console.log(err))
   }
 
@@ -51,6 +71,7 @@ function App() {
     auth.authorize(email, password)
       .then(() => {
         setIsLoginIn(true);
+        navigate('/');
       })
       .catch((err) => console.log(err))
   }
@@ -66,22 +87,21 @@ function App() {
         .catch((err) => console.log(err))
     }
   }
+
+  function getCurrentUser() {
+    mainApi.getUserData()
+      .then((res) => {
+        setCurrentUser(res);
+      })
+      .catch(err => console.log(err))
+  }
   
   React.useEffect(() => {
     if (location.pathname === '/movies') {
       getMovies();
+    } else if (location.pathname === '/saved-movies') {
+      getSavedMovies();
     }
-    const savedCards = [];
-    const savedCard = {
-      src: 'https://approvecode.com/wp-content/uploads/2020/04/Preloader-na-html-i-css.png',
-      alt: "фото",
-      text: "Тест",
-      duration: "1ч2м"
-    }
-    for (let i = 0; i < 4; i++) {
-      savedCards.push(savedCard);
-    }
-    setMovieSavedList(savedCards)
     },[location.pathname])
 
   function openSideBar() {
@@ -93,15 +113,20 @@ function App() {
   }
 
   React.useEffect(() => {
+    getCurrentUser()
+  }, [])
+
+  React.useEffect(() => {
     checkToken();
-  }, [window.location])
+    console.log(localStorage.getItem('jwt'))
+  }, [isLoginIn, currentUser])
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
         <Routes>
-          <Route path="*" element={<NotFound code="404" text='Ничего не найдено'/>}/>
-          <Route path="/" element={<Main openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>}/>
+          <Route path="*" element={<NotFound linkText="Назад" code="404" text='Ничего не найдено'/>}/>
+          <Route path="/" element={<Main isLoginIn={isLoginIn} openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>}/>
           <Route path="/signup" element={<Register register={register}/>}/>
           <Route path="/signin" element={<Login login={login}/>}/>
           <Route
@@ -111,9 +136,11 @@ function App() {
                 isLoginIn={isLoginIn}
                 children={
                   isLoginIn && <Profile
+                    isLoginIn={isLoginIn}
                     openSideBar={openSideBar}
                     closeSideBar={closeSideBar}
                     isOpen={isOpen}
+                    setIsLoginIn={setIsLoginIn}
                   />
                 }
               />
@@ -126,13 +153,16 @@ function App() {
                 isLoginIn={isLoginIn}
                 children={
                   isLoginIn && <Movies
+                    deleteFavouriteMovie={deleteFavouriteMovie}
                     setFavouriteStatus={setFavouriteStatus} 
                     isFavourite={isFavourite} 
                     isLoading={isLoading} 
-                    movieList={movieList} 
+                    movieList={movieList}
+                    movieSavedList={movieSavedList}
                     openSideBar={openSideBar} 
                     closeSideBar={closeSideBar} 
                     isOpen={isOpen}
+                    isLoginIn={isLoginIn}
                   />
                 }
               />
@@ -144,11 +174,13 @@ function App() {
               <ProtectedRoute
                 isLoginIn={isLoginIn}
                 children={
-                  isLoginIn && <SavedMovies 
+                  isLoginIn && <SavedMovies
+                    deleteFavouriteMovie={deleteFavouriteMovie}
                     movieSavedList={movieSavedList} 
                     openSideBar={openSideBar} 
                     closeSideBar={closeSideBar} 
                     isOpen={isOpen}
+                    isLoginIn={isLoginIn}
                   />
                 }
               />

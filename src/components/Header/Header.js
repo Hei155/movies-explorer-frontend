@@ -5,14 +5,12 @@ import profilePic from '../../images/ProfilePic.svg';
 
 
 export function Header(props) {
-    const [logenIn, setLogenIn] = React.useState(true);
-
     return (
         <header className="header">
             <nav className="header__navigation">
             <Link className="header__link" to="/"><img src={logo} className="header__logo" alt="Лого" /></Link>
             <div className="header__profile">
-                {!logenIn 
+                {!props.isLoginIn
                 ?
                 <>
                     <Link className="header__registration" to="/signup">Регистрация</Link>

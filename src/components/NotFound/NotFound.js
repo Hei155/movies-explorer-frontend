@@ -8,7 +8,7 @@ export function NotFound(props) {
         <section className="error">
             <h1 className="error__code">{props.code}</h1>
             <span className="error__describe">{props.text}</span>
-            <span className="error__back" onClick={() => navigate(-1)}>Назад</span>
+            <span className="error__back" onClick={() => navigate(-1)}>{props.linkText}</span>
         </section>
     )
 }
