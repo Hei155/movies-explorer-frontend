@@ -1,9 +1,12 @@
 import React from "react";
 import { MoviesCard } from "../MoviesCard/MoviesCard"
 import { moviesApiBaseUrl } from "../../utils/const";
+import { mainApiBaseUrl } from "../../utils/const";
+import { useLocation } from "react-router-dom";
 
 export function MoviesCardList(props) { 
-
+    const [currentBaseUrl, setCurrentBaseUrl] = React.useState('');
+    const location = useLocation();
     function transformDuration(durationInMinutes) {
         if (Number(durationInMinutes) < 60) {
             return `${durationInMinutes}м`;
@@ -21,9 +24,27 @@ export function MoviesCardList(props) {
         }
     }
 
+    function checkPath() {
+        if (location.pathname === '/saved-movies') {
+            setCurrentBaseUrl(mainApiBaseUrl);
+        } else if (location.pathname === '/movies') {
+            setCurrentBaseUrl(moviesApiBaseUrl);
+        }
+    }
+
+    React.useEffect(() => {
+        checkPath();
+    }, [])
+
     return (
         <> 
             {props.checkCurrentCards().map((movie, i) => {
+                let currentLink;
+                if (location.pathname === '/saved-movies') {
+                    currentLink=movie.image;
+                } else {
+                    currentLink=movie.image.url;
+                }
                 return (
                     <MoviesCard
                         deleteFavouriteMovie={props.deleteFavouriteMovie}
@@ -34,7 +55,7 @@ export function MoviesCardList(props) {
                         isFavourite={props.isFavourite}
                         handleClick={props.handleClick}
                         toggleBtnClass={props.toggleBtnClass}
-                        src={`${moviesApiBaseUrl}${movie.image.url}`}
+                        src={`${currentBaseUrl}${currentLink}`}
                         alt={movie.image.alternativeText}
                         text={movie.nameRU}
                         duration={transformDuration(movie.duration)}

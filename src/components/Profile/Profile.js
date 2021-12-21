@@ -6,7 +6,7 @@ import UseForm from '../UseForm/UseForm';
 import { CurrentUserContext } from '../../contexts/currentUserContext';
 
 export function Profile(props) {
-    const { values, handleChange, errors, isValid, resetForm } = UseForm();
+    const { values, handleClick, handleChange, errors, isValid, resetForm } = UseForm();
     const currentUser = React.useContext(CurrentUserContext);
 
     function handleSubmit(evt) {
@@ -27,7 +27,7 @@ export function Profile(props) {
                 <form className="profile__form" onSubmit={handleSubmit}>
                     <label className="profile__field">
                         <span className="profile__text">Имя</span>
-                        <input className="profile__input" name="name" type="text" onChange={handleChange} minLength={3} placeholder='name' value={currentUser.name || ''}/>                                          
+                        <input className="profile__input" name="name" type="text" onClick={handleClick} onChange={handleChange} minLength={3} value={currentUser.name || ''}/>                                          
                     </label>
                     <label className="profile__field">
                         <span className="profile__text">Email</span>

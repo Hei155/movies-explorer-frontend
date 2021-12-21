@@ -4,7 +4,7 @@ export function MoviesCard(props) {
 
     function handleClick() {
         if (props.isActive) {
-            console.log(props.data.id)
+            console.log(props.data)
             props.deleteFavouriteMovie(props.data.id)
         } else {
             props.setFavouriteStatus(props.data)
@@ -12,7 +12,7 @@ export function MoviesCard(props) {
     }
 
     function handleClickDelete() {
-        props.deleteFavouriteMovie(String(props.data.movieId))
+        props.deleteFavouriteMovie(props.data._id)
     }
 
 

@@ -42,6 +42,7 @@ function App() {
     setIsLoading(true);
     mainApi.getFavouritesMovie()
       .then((res) => {
+        console.log(res)
         setMovieSavedList(res);
         setIsLoading(false);
       })
@@ -54,8 +55,8 @@ function App() {
     .catch((err) => console.log(err))
   }
 
-  function deleteFavouriteMovie() {
-    mainApi.deleteFavouriteMovie()
+  function deleteFavouriteMovie(id) {
+    mainApi.deleteFavouriteMovie(id)
       .catch(err => console.log(err))
   }
 
