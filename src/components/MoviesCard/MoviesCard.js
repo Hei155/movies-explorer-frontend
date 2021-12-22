@@ -1,10 +1,13 @@
 import React from "react"
+import { CurrentUserContext } from "../../contexts/currentUserContext"
 
 export function MoviesCard(props) {
     const [activeClass, setIsActiveClass] = React.useState(false)
+    const currentUser = React.useContext(CurrentUserContext);
+
     function handleClick() {
-        if (props.isActive) {
-            props.deleteFavouriteMovie(props.data.movieId);
+        if (props.isActive || activeClass) {
+            props.deleteFavouriteMovie(props.data, props.movieSavedList.find((savedMovie) => savedMovie.movieId === props.data.movieId)._id);
             setIsActiveClass(false);
         } else {
             props.setFavouriteStatus(props.data)
@@ -15,7 +18,6 @@ export function MoviesCard(props) {
     function handleClickDelete() {
         props.deleteFavouriteMovie(props.data, props.data._id)
     }
-
 
     return (
         <div className={props.class}>

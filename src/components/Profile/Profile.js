@@ -16,6 +16,8 @@ export function Profile(props) {
     function handleSignOut() {
         props.setIsLoginIn(false);
         localStorage.removeItem('jwt');
+        localStorage.removeItem('movies');
+        localStorage.removeItem('savedMovies');
     }
 
     return (

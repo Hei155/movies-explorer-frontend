@@ -1,7 +1,10 @@
 import React from "react";
 import { MoviesCard } from "../MoviesCard/MoviesCard"
+import { CurrentUserContext } from "../../contexts/currentUserContext";
+import { SavedMovies } from "../SavedMovies/SavedMovies";
 
-export function MoviesCardList(props) { 
+export function MoviesCardList(props) {
+    const currentUser = React.useContext(CurrentUserContext);
     function transformDuration(durationInMinutes) {
         if (Number(durationInMinutes) < 60) {
             return `${durationInMinutes}м`;
@@ -22,25 +25,26 @@ export function MoviesCardList(props) {
     return (
         <> 
             {props.checkCurrentCards().map((movie, i) => {
-                return (
-                    <MoviesCard
-                        deleteFavouriteMovie={props.deleteFavouriteMovie}
-                        isActive={props.movieSavedList.some(i => i.movieId === movie.movieId)}
-                        movieSavedList={props.movieSavedList}
-                        key={i}
-                        setFavouriteStatus={props.setFavouriteStatus}
-                        data={movie}
-                        isFavourite={props.isFavourite}
-                        handleClick={props.handleClick}
-                        toggleBtnClass={props.toggleBtnClass}
-                        src={movie.image}
-                        alt={movie.image.alternativeText}
-                        text={movie.nameRU}
-                        duration={transformDuration(movie.duration)}
-                        class={checkCards(i)}
-                        youTubeLink={movie.trailer}
-                    />
-                )
+                        return (
+                            <MoviesCard
+                                isActive={props.movieSavedList.some((savedMovie) => savedMovie.movieId === movie.movieId)}
+                                setIsEmpty={props.setIsEmpty}
+                                deleteFavouriteMovie={props.deleteFavouriteMovie}
+                                movieSavedList={props.movieSavedList}
+                                key={i}
+                                setFavouriteStatus={props.setFavouriteStatus}
+                                data={movie}
+                                isFavourite={props.isFavourite}
+                                handleClick={props.handleClick}
+                                toggleBtnClass={props.toggleBtnClass}
+                                src={movie.image}
+                                alt={movie.image.alternativeText}
+                                text={movie.nameRU}
+                                duration={transformDuration(movie.duration)}
+                                class={checkCards(i)}
+                                youTubeLink={movie.trailer}
+                            />
+                        )
             })
             }
         </>

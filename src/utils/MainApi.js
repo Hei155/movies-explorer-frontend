@@ -40,7 +40,6 @@ class MainApi {
     }
 
     deleteFavouriteMovie(id) {
-        console.log(id)
         return fetch (`${this._baseUrl}/movies/${id}`, {
             method: 'DELETE',
             headers: this._headers,
@@ -53,7 +52,11 @@ class MainApi {
     getUserData() {
         return fetch(`${this._baseUrl}/users/me`, {
             method: 'GET',
-            headers: this._headers
+            headers: {
+                'authorization': `Bearer ${localStorage.getItem('jwt')}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
         })
         .then((res) => this._handleResponse(res));
     }

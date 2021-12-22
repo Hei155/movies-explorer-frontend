@@ -88,7 +88,7 @@ export function MoviesFrame(props) {
                     {isEmpty ?
                     <NotFound text="Ничего не найдено."/>
                     :
-                    <MovieGrid deleteFavouriteMovie={props.deleteFavouriteMovie} movieSavedList={props.movieSavedList} setFavouriteStatus={props.setFavouriteStatus} checkCurrentCards={checkCurrentCards} movies={movies} shortMovies={shortMovies} isShort={isShort} data={props.data} toggleBtnClass={props.toggleBtnClass} handleClick={props.handleClick} isFavourite={props.isFavourite}/>
+                    <MovieGrid setIsEmpty={setIsEmpty} deleteFavouriteMovie={props.deleteFavouriteMovie} movieSavedList={props.movieSavedList} setFavouriteStatus={props.setFavouriteStatus} checkCurrentCards={checkCurrentCards} movies={movies} shortMovies={shortMovies} isShort={isShort} data={props.data} toggleBtnClass={props.toggleBtnClass} handleClick={props.handleClick} isFavourite={props.isFavourite}/>
                     }
                 </main>
                 <Footer/>

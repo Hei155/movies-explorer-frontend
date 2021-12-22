@@ -70,7 +70,7 @@ export function MovieGrid(props) {
     return (
         <>
             <div className="movies">
-            <MoviesCardList deleteFavouriteMovie={props.deleteFavouriteMovie} movieSavedList={props.movieSavedList}setFavouriteStatus={props.setFavouriteStatus} isShort={props.isShort} isFavourite={props.isFavourite} handleClick={props.handleClick} maxCards={maxCards} toggleBtnClass={props.toggleBtnClass} data={props.data} checkCurrentCards={props.checkCurrentCards}></MoviesCardList>
+            <MoviesCardList setIsEmpty={props.setIsEmpty} deleteFavouriteMovie={props.deleteFavouriteMovie} movieSavedList={props.movieSavedList}setFavouriteStatus={props.setFavouriteStatus} isShort={props.isShort} isFavourite={props.isFavourite} handleClick={props.handleClick} maxCards={maxCards} toggleBtnClass={props.toggleBtnClass} data={props.data} checkCurrentCards={props.checkCurrentCards}></MoviesCardList>
             </div>
             <button className={isVisible ? "movies__btn movies__btn_hidden" : "movies__btn"} onClick={extendMovieList}>Ещё</button>
         </>

@@ -22,6 +22,7 @@ function App() {
   const [movieSavedList, setMovieSavedList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
+  const [isReload, setIsReload] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -51,8 +52,8 @@ function App() {
     setIsLoading(true);
     mainApi.getFavouritesMovie()
       .then((res) => {
-        setMovieSavedList(res);
-        localStorage.setItem('savedMovies', JSON.stringify(res));
+        setMovieSavedList(res.filter((movie) => movie.owner === currentUser._id));
+        localStorage.setItem('savedMovies', JSON.stringify(res.filter((movie) => movie.owner === currentUser._id)));
         setIsLoading(false);
       })
       .catch(err => console.log(err))
@@ -61,7 +62,14 @@ function App() {
   function setFavouriteStatus(data) {
     mainApi.setFavouriteMovie(data)
     .then(() => {
+      mainApi.getFavouritesMovie()
+        .then((res) => {
+          setMovieSavedList(res.filter((movie) => movie.owner === currentUser._id));
+          localStorage.setItem('savedMovies', JSON.stringify(res.filter((movie) => movie.owner === currentUser._id)));
+        })
+        .catch(err => console.log(err))
       localStorage.setItem('savedMovies', JSON.stringify([...movieSavedList, data]));
+      return true
     })
     .catch((err) => console.log(err))
   }
@@ -85,6 +93,7 @@ function App() {
   function login(email, password) {
     auth.authorize(email, password)
       .then(() => {
+        getCurrentUser();
         setIsLoginIn(true);
         navigate('/');
       })
@@ -139,14 +148,12 @@ function App() {
     },[location.pathname])
 
   React.useEffect(() => {
-    if (location.pathname === '/profile') {
-      getCurrentUser();
-    }
+    getCurrentUser();
   }, [location.pathname])
 
   React.useEffect(() => {
     checkToken();
-  }, [])
+  }, [location.pathname, isLoginIn])
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
