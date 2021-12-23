@@ -8,6 +8,7 @@ import { Login } from '../Login/Login';
 import { Profile } from '../Profile/Profile';
 import { SavedMovies } from '../SavedMovies/SavedMovies';
 import { NotFound } from '../NotFound/NotFound';
+import { NotificationPopup } from '../NotificationPopup/NotificationPopup';
 import movieApi from '../../utils/MoviesApi';
 import mainApi from '../../utils/MainApi';
 import auth from '../../utils/Auth';
@@ -24,6 +25,7 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
   const [authError, setAuthError] = React.useState('');
   const [isBlockReq, setIsBlockReq] = React.useState(false);
+  const [isClose, setIsClose] = React.useState(true);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -88,6 +90,7 @@ function App() {
     setIsBlockReq(true);
     auth.authorize(email, password)
       .then(() => {
+        setIsClose(false);
         setIsBlockReq(false);
         setAuthError('')
         getCurrentUser();
@@ -105,6 +108,7 @@ function App() {
     setIsBlockReq(true);
     auth.register(name, email, password)
       .then(() => {
+        setIsClose(false);
         getCurrentUser();
         setIsBlockReq(false);
         setAuthError('')
@@ -181,6 +185,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
+        <NotificationPopup setIsClose={setIsClose} isClose={isClose}></NotificationPopup>
         <Routes>
           <Route path="*" element={<NotFound linkText="Назад" code="404" text='Ничего не найдено'/>}/>
           <Route path="/" element={<Main isLoginIn={isLoginIn} openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>}/>

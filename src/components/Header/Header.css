@@ -89,6 +89,10 @@
     transition: opacity ease-in-out .3s;
 }
 
+.header__sidebar_hidden {
+    display: none;
+}
+
 .header__sidebar:hover {
     opacity: .7;
 }
@@ -141,7 +145,7 @@
 }
 
 @media screen and (max-width: 909px) {
-    .header__profile {
+    .header__profile_hidden {
         display: none;
     }
     .header__sidebar {
