@@ -12,13 +12,13 @@ export function AuthFrame(props) {
                     {props.children}
                     <label className="auth__field">
                         <span className="auth__text">E-mail</span>
-                        <input className="auth__input" type="email" name="email" required minLength={3} maxLength={30} onChange={props.handleChange}/>
+                        <input className="auth__input" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required minLength={3} maxLength={30} onChange={props.handleChange}/>
                         <span className="auth__error"></span>
                     </label>
                     <label className="auth__field">
                         <span className="auth__text">Пароль</span>
                         <input className="auth__input" type="password" name="password" required minLength={3} maxLength={30} onChange={props.handleChange}/>
-                        <span className="auth__error">{props.errors.email || props.errors.password}</span>
+                        <span className="auth__error">{props.errors.name || props.errors.email || props.errors.password || props.authError}</span>
                     </label>
                 </div>
                 <button disabled={props.isBtnActive ? '' : true} className={props.btnClassName} type="submit">{props.text}</button>

@@ -8,7 +8,8 @@ export function Register(props) {
     const { values, handleChange, errors, isValid } = UseForm();
 
     function checkBtn() {
-        if (isValid) {
+        if (isValid && !props.isBlockReq) {
+            props.setAuthError('')
             setBtnActive(true);
             setBtnClassName('auth__submit');
         } else {
@@ -29,6 +30,7 @@ export function Register(props) {
 
     return (
         <AuthFrame
+            authError={props.authError}
             onSubmit={onSubmit}
             errors={errors}
             handleChange={handleChange}
@@ -43,7 +45,6 @@ export function Register(props) {
             <label className="register__field">
                 <span className="register__text">Имя</span>
                 <input className="register__input" name="name" type="text" minLength={3} maxLength={30} onChange={handleChange}/>
-                <span className="register__error">{errors.name}</span>
             </label>
         </AuthFrame>
     )

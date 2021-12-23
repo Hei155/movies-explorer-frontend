@@ -1,6 +1,7 @@
 import React from "react";
 import { useMediaQuery } from 'react-responsive';
 import { MoviesCardList } from "../MoviesCardList/MoviesCardList";
+import { movieNumber, extendMovieNumber } from "../../utils/const";
 
 export function MovieGrid(props) {
     const isBigger = useMediaQuery({ query: `(min-width: 1280px)` })
@@ -10,13 +11,13 @@ export function MovieGrid(props) {
 
     function checkMaxCard() {
         if (isBigWindow) {
-            return 12;
+            return movieNumber.forBigWindow;
         } else if (isSmallWindow) {
-            return 8;
+            return movieNumber.forSmallWindow;
         } else if (isMobile) {
-            return 5;
+            return movieNumber.forMobile;
         } else if (isBigger) {
-            return 16;
+            return movieNumber.forBiggerWindow;
         }
     }
     
@@ -24,13 +25,13 @@ export function MovieGrid(props) {
 
     React.useEffect(() => {
         if (isBigWindow) {
-            setMaxCards(12);
+            setMaxCards(movieNumber.forBigWindow);
         } else if (isSmallWindow) {
-            setMaxCards(8);
+            setMaxCards(movieNumber.forSmallWindow);
         } else if (isMobile) {
-            setMaxCards(5);
+            setMaxCards(movieNumber.forMobile);
         } else if (isBigger) {
-            setMaxCards(16)
+            setMaxCards(movieNumber.forBiggerWindow)
         }
     },[isBigWindow, isSmallWindow, isMobile, isBigger])
 
@@ -54,11 +55,11 @@ export function MovieGrid(props) {
 
     function extendMovieList() {
         if (isBigger) {
-            setMaxCards(maxCards + 4)
+            setMaxCards(maxCards + extendMovieNumber.forBiggerWindow)
         } else if (isBigWindow) {
-            setMaxCards(maxCards + 3)
+            setMaxCards(maxCards + extendMovieNumber.forBigWindow)
         } else if (isSmallWindow || isMobile) {
-            setMaxCards(maxCards + 2)
+            setMaxCards(maxCards + extendMovieNumber.forSmallAndMobile)
         }
         if (props.isShort) {
             checkBtnVisible(props.shortMovies);

@@ -6,21 +6,25 @@ import { MovieGrid } from "../MovieGrid/MovieGrid";
 import { SideBar } from '../SideBar/SideBar';
 import { Preloader } from "../Preloader/Preloader";
 import { NotFound } from "../NotFound/NotFound";
+import { shortMovieDuration } from "../../utils/const";
+import { useLocation } from "react-router-dom";
 
 export function MoviesFrame(props) {
-    const [isShort, setShort] = React.useState(false);
+    const [isShort, setShort] = React.useState(localStorage.getItem('isMovieShort') || false);
     const [isEmpty, setIsEmpty] = React.useState(false);
-    const [movieName, setMovieName] = React.useState('');
+    const [movieName, setMovieName] = React.useState(localStorage.getItem("movieName") || false);
     const [movies, setMovies] = React.useState([]);
     const [shortMovies, setShortMovies] = React.useState([]);
     const [isErrorVisible, setIsErrorVisible] = React.useState(false);
+    const location = useLocation();
 
     function handleChange(evt) {
-        setMovieName(evt.target.value)
+        setMovieName(evt.target.value);
+        localStorage.setItem("movieName", evt.target.value);
         if (evt.target.value === '') {
             setIsErrorVisible(true);
             if (isShort) {
-                setShortMovies(props.data.filter((movie) => movie.duration <= 40));
+                setShortMovies(props.data.filter((movie) => movie.duration <= shortMovieDuration));
             } else {
                 setMovies(props.data);
             }
@@ -31,20 +35,41 @@ export function MoviesFrame(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
-        setShortMovies(props.data.filter((movie) => movie.duration <= 40));
-        setMovies(props.data)
-        if (isShort) {
-            setShortMovies(props.data.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase())))
+        setShortMovies(shortMovies.filter((movie) => movie.duration <= shortMovieDuration));
+        setMovies(movies)
+        if (movieName) {
+            if (isShort) {
+                setShortMovies(shortMovies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase())));
+                localStorage.setItem('movies', JSON.stringify(shortMovies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase()))));
+                localStorage.setItem('savedMovies', JSON.stringify(shortMovies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase()))));
+
+            } else {
+                setMovies(movies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase())));
+                localStorage.setItem('movies', JSON.stringify(movies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase()))));
+                localStorage.setItem('savedMovies', JSON.stringify(movies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase()))));
+            }
         } else {
-            setMovies(props.data.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase())))
+            if (location.pathname === '/movies') {
+                props.getMovies();
+            } else if (location.pathname === '/saved-movies') {
+                props.getSavedMovies();
+            }
         }
     }
 
     function toggleShort() {
         if (isShort) {
             setShort(false);
+            if (movieName) {
+                setMovies(movies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase())));
+            }
+            localStorage.removeItem('isMovieShort');
         } else {
             setShort(true);
+            if (movieName) {
+                setShortMovies(shortMovies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase())));
+            }
+            localStorage.setItem('isMovieShort', true);
         }
     }
 
@@ -57,7 +82,7 @@ export function MoviesFrame(props) {
 
     React.useEffect(() => {
             if (shortMovies) {
-                setShortMovies(props.data.filter((movie) => movie.duration <= 40));
+                setShortMovies(props.data.filter((movie) => movie.duration <= shortMovieDuration));
             } else {
                 setMovies(props.data);
             }
@@ -65,7 +90,7 @@ export function MoviesFrame(props) {
 
     React.useEffect(() => {
         setMovies(props.data);
-        setShortMovies(props.data.filter((movie) => movie.duration <= 40))
+        setShortMovies(props.data.filter((movie) => movie.duration <= shortMovieDuration))
         setIsErrorVisible(false)
     }, [props.data])
 
@@ -84,7 +109,7 @@ export function MoviesFrame(props) {
         <>  
                 <Header isLoginIn={props.isLoginIn} openSideBar={props.openSideBar}/>
                 <main className="movie">
-                    <SearchForm isErrorVisible={isErrorVisible} toggleShort={toggleShort} handleChange={handleChange} handleSubmit={handleSubmit}/>
+                    <SearchForm isShort={isShort} isErrorVisible={isErrorVisible} toggleShort={toggleShort} handleChange={handleChange} handleSubmit={handleSubmit}/>
                     {isEmpty ?
                     <NotFound text="Ничего не найдено."/>
                     :

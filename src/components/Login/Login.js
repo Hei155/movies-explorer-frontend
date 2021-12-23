@@ -5,10 +5,11 @@ import UseForm from '../UseForm/UseForm';
 export function Login(props) {
     const [btnClassName, setBtnClassName] = React.useState('auth__submit auth__submit_inactive');
     const [isBtnActive, setBtnActive] = React.useState(false);
-    const { values, handleChange, errors, isValid, resetForm } = UseForm();
+    const { values, handleChange, errors, isValid } = UseForm();
 
     function checkBtn() {
-        if (isValid) {
+        if (isValid && !props.isBlockReq) {
+            props.setAuthError('')
             setBtnActive(true);
             setBtnClassName('auth__submit');
         } else {
@@ -28,6 +29,7 @@ export function Login(props) {
 
     return (
         <AuthFrame
+            authError={props.authError}
             onSubmit={onSubmit}
             errors={errors}
             btnClassName={btnClassName}

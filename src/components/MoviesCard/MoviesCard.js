@@ -1,9 +1,7 @@
 import React from "react"
-import { CurrentUserContext } from "../../contexts/currentUserContext"
 
 export function MoviesCard(props) {
     const [activeClass, setIsActiveClass] = React.useState(false)
-    const currentUser = React.useContext(CurrentUserContext);
 
     function handleClick() {
         if (props.isActive || activeClass) {

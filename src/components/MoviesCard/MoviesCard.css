@@ -1,7 +1,8 @@
 .card {
     background: #222222;
     height: auto;
-    position: relative
+    position: relative;
+    max-width: 511.5px;
 }
 
 .card_hidden {

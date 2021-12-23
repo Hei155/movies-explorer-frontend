@@ -4,6 +4,7 @@ import { MoviesFrame } from "../MoviesFrame/MoviesFrame";
 export function SavedMovies(props) {
     return (
         <MoviesFrame
+            getSavedMovies={props.getSavedMovies}
             deleteFavouriteMovie={props.deleteFavouriteMovie}
             movieSavedList={props.movieSavedList}
             isLoginIn={props.isLoginIn}

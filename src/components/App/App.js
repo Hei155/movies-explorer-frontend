@@ -22,7 +22,8 @@ function App() {
   const [movieSavedList, setMovieSavedList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
-  const [isReload, setIsReload] = React.useState(false);
+  const [authError, setAuthError] = React.useState('');
+  const [isBlockReq, setIsBlockReq] = React.useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -78,31 +79,52 @@ function App() {
     mainApi.deleteFavouriteMovie(id)
       .then(() => {
         setMovieSavedList([...movieSavedList].filter(movie => !(movie.movieId === card.movieId)))
+        localStorage.setItem('savedMovies', JSON.stringify([...movieSavedList].filter(movie => !(movie.movieId === card.movieId))));
       })
       .catch(err => console.log(err))
   }
 
-  function register(name, email, password) {
-    auth.register(name, email, password)
-      .then(() => {
-        navigate('/signin');
-      })
-      .catch((err) => console.log(err))
-  }
-
   function login(email, password) {
+    setIsBlockReq(true);
     auth.authorize(email, password)
       .then(() => {
+        setIsBlockReq(false);
+        setAuthError('')
         getCurrentUser();
         setIsLoginIn(true);
-        navigate('/');
+        navigate('/movies');
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        setIsBlockReq(false);
+        console.log(err)
+        setAuthError('Что-то пошло не так...')
+      })
+  }
+
+  function register(name, email, password) {
+    setIsBlockReq(true);
+    auth.register(name, email, password)
+      .then(() => {
+        getCurrentUser();
+        setIsBlockReq(false);
+        setAuthError('')
+        login(email, password); 
+      })
+      .catch((err) => {
+        setIsBlockReq(false);
+        console.log(err);
+        setAuthError('Что-то пошло не так...')
+      })
   }
 
   function updateUserInfo(email, name) {
+    setIsBlockReq(true);
     auth.updateUser(email, name)
-    .catch(err => console.log(err))
+    .then(() => setIsBlockReq(false))
+    .catch((err) => {
+      setIsBlockReq(false);
+      console.log(err)
+  })
   }
 
   function checkToken() {
@@ -134,12 +156,12 @@ function App() {
 
   React.useEffect(() => {
     if (location.pathname === '/movies' || location.pathname === '/saved-movies') {
-      if (localStorage.getItem('movies') && JSON.parse(localStorage.getItem('movies')).length === movieList.length) {
+      if (localStorage.getItem('movies')) {
         setMovieList(JSON.parse(localStorage.getItem('movies')));
       } else {
         getMovies();
       }
-      if (localStorage.getItem('savedMovies') && JSON.parse(localStorage.getItem('savedMovies')).length === movieSavedList.length) {
+      if (localStorage.getItem('savedMovies')) {
         setMovieSavedList(JSON.parse(localStorage.getItem('savedMovies')));
       } else {
         getSavedMovies();
@@ -149,7 +171,8 @@ function App() {
 
   React.useEffect(() => {
     getCurrentUser();
-  }, [location.pathname])
+    document.title = "Movies Project";
+  }, [location.pathname, isLoginIn])
 
   React.useEffect(() => {
     checkToken();
@@ -161,8 +184,38 @@ function App() {
         <Routes>
           <Route path="*" element={<NotFound linkText="Назад" code="404" text='Ничего не найдено'/>}/>
           <Route path="/" element={<Main isLoginIn={isLoginIn} openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>}/>
-          <Route path="/signup" element={<Register register={register}/>}/>
-          <Route path="/signin" element={<Login login={login}/>}/>
+          <Route 
+            path="/signup" 
+            element={
+              <ProtectedRoute
+                isLoginIn={!isLoginIn}
+                children={
+                  !isLoginIn && <Register
+                    setAuthError={setAuthError}
+                    authError={authError}
+                    register={register}
+                    isBlockReq={isBlockReq}
+                  />
+                }
+              />
+            }
+          />
+          <Route 
+            path="/signin" 
+            element={
+              <ProtectedRoute
+                isLoginIn={!isLoginIn}
+                children={
+                  !isLoginIn && <Login
+                    setAuthError={setAuthError}
+                    authError={authError}
+                    login={login}
+                    isBlockReq={isBlockReq}
+                  />
+                }
+              />
+            }
+          />
           <Route
             path="/profile"
             element={
@@ -170,6 +223,7 @@ function App() {
                 isLoginIn={isLoginIn}
                 children={
                   isLoginIn && <Profile
+                    isBlockReq={isBlockReq}
                     updateUserInfo={updateUserInfo}
                     isLoginIn={isLoginIn}
                     openSideBar={openSideBar}
@@ -188,6 +242,7 @@ function App() {
                 isLoginIn={isLoginIn}
                 children={
                   isLoginIn && <Movies
+                    getMovies={getMovies}
                     deleteFavouriteMovie={deleteFavouriteMovie}
                     setFavouriteStatus={setFavouriteStatus} 
                     movieList={movieList}
@@ -209,6 +264,7 @@ function App() {
                 isLoginIn={isLoginIn}
                 children={
                   isLoginIn && <SavedMovies
+                    getSavedMovies={getSavedMovies}
                     deleteFavouriteMovie={deleteFavouriteMovie}
                     movieSavedList={movieSavedList} 
                     openSideBar={openSideBar} 
