@@ -1,10 +1,7 @@
 import React from "react";
 import { MoviesCard } from "../MoviesCard/MoviesCard"
-import { CurrentUserContext } from "../../contexts/currentUserContext";
-import { SavedMovies } from "../SavedMovies/SavedMovies";
 
 export function MoviesCardList(props) {
-    const currentUser = React.useContext(CurrentUserContext);
     function transformDuration(durationInMinutes) {
         if (Number(durationInMinutes) < 60) {
             return `${durationInMinutes}м`;

@@ -30,6 +30,7 @@ export function Register(props) {
 
     return (
         <AuthFrame
+            isBlockReq={props.isBlockReq}
             authError={props.authError}
             onSubmit={onSubmit}
             errors={errors}

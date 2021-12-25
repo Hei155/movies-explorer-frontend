@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { movieMap } from '../../utils/movieHelper';
 
 function App() {
+  const [activeClass, setIsActiveClass] = React.useState(false)
   const [isOpen , setOpen] = React.useState(false);
   const [movieList, setMovieList] = React.useState([]);
   const [movieSavedList, setMovieSavedList] = React.useState([]);
@@ -26,6 +27,7 @@ function App() {
   const [authError, setAuthError] = React.useState('');
   const [isBlockReq, setIsBlockReq] = React.useState(false);
   const [isClose, setIsClose] = React.useState(true);
+  const [popupText, setPopupText] = React.useState('');
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -51,22 +53,23 @@ function App() {
       })
   }
 
-  function getSavedMovies() {
+  function getSavedMovies(user=currentUser._id) {
     setIsLoading(true);
-    mainApi.getFavouritesMovie()
+    mainApi.getFavouritesMovie(localStorage.getItem('jwt'))
       .then((res) => {
-        setMovieSavedList(res.filter((movie) => movie.owner === currentUser._id));
-        localStorage.setItem('savedMovies', JSON.stringify(res.filter((movie) => movie.owner === currentUser._id)));
+        setMovieSavedList(res.filter((movie) => movie.owner === user));
+        localStorage.setItem('savedMovies', JSON.stringify(res.filter((movie) => movie.owner === user)));
         setIsLoading(false);
       })
       .catch(err => console.log(err))
   }
   
   function setFavouriteStatus(data) {
-    mainApi.setFavouriteMovie(data)
+    mainApi.setFavouriteMovie(data, localStorage.getItem('jwt'))
     .then(() => {
-      mainApi.getFavouritesMovie()
+      mainApi.getFavouritesMovie(localStorage.getItem('jwt'))
         .then((res) => {
+          setIsActiveClass(true);
           setMovieSavedList(res.filter((movie) => movie.owner === currentUser._id));
           localStorage.setItem('savedMovies', JSON.stringify(res.filter((movie) => movie.owner === currentUser._id)));
         })
@@ -78,24 +81,28 @@ function App() {
   }
 
   function deleteFavouriteMovie(card, id) {
-    mainApi.deleteFavouriteMovie(id)
+    mainApi.deleteFavouriteMovie(id, localStorage.getItem('jwt'))
       .then(() => {
+        setIsActiveClass(false);
         setMovieSavedList([...movieSavedList].filter(movie => !(movie.movieId === card.movieId)))
         localStorage.setItem('savedMovies', JSON.stringify([...movieSavedList].filter(movie => !(movie.movieId === card.movieId))));
       })
       .catch(err => console.log(err))
   }
 
-  function login(email, password) {
+  function login(email, password, popupStatus='авторизовались!') {
     setIsBlockReq(true);
+    console.log(isBlockReq)
     auth.authorize(email, password)
       .then(() => {
+        setIsLoginIn(true);
         setIsClose(false);
         setIsBlockReq(false);
-        setAuthError('')
+        setAuthError('');
         getCurrentUser();
-        setIsLoginIn(true);
         navigate('/movies');
+        setPopupText(popupStatus);
+        checkToken();
       })
       .catch((err) => {
         setIsBlockReq(false);
@@ -104,15 +111,12 @@ function App() {
       })
   }
 
-  function register(name, email, password) {
+  function register(name, email, password,  popupStatus='зарегистрировались!') {
     setIsBlockReq(true);
     auth.register(name, email, password)
       .then(() => {
-        setIsClose(false);
-        getCurrentUser();
         setIsBlockReq(false);
-        setAuthError('')
-        login(email, password); 
+        login(email, password, popupStatus);
       })
       .catch((err) => {
         setIsBlockReq(false);
@@ -124,7 +128,11 @@ function App() {
   function updateUserInfo(email, name) {
     setIsBlockReq(true);
     auth.updateUser(email, name)
-    .then(() => setIsBlockReq(false))
+    .then(() => {
+      setPopupText('обновили свои данные');
+      setIsClose(false);
+      setIsBlockReq(false);
+    })
     .catch((err) => {
       setIsBlockReq(false);
       console.log(err)
@@ -143,9 +151,21 @@ function App() {
   }
 
   function getCurrentUser() {
-    mainApi.getUserData()
+    mainApi.getUserData(localStorage.getItem('jwt'))
       .then((res) => {
         setCurrentUser(res);
+        if (location.pathname === '/movies' || location.pathname === '/saved-movies') {
+          if (localStorage.getItem('movies')) {
+            setMovieList(JSON.parse(localStorage.getItem('movies')));
+          } else {
+            getMovies();
+          }
+          if (localStorage.getItem('savedMovies')) {
+            setMovieSavedList(JSON.parse(localStorage.getItem('savedMovies')));
+          } else {
+            getSavedMovies(res._id);
+          }
+        }
       })
       .catch(err => console.log(err))
   }
@@ -159,21 +179,6 @@ function App() {
   }
 
   React.useEffect(() => {
-    if (location.pathname === '/movies' || location.pathname === '/saved-movies') {
-      if (localStorage.getItem('movies')) {
-        setMovieList(JSON.parse(localStorage.getItem('movies')));
-      } else {
-        getMovies();
-      }
-      if (localStorage.getItem('savedMovies')) {
-        setMovieSavedList(JSON.parse(localStorage.getItem('savedMovies')));
-      } else {
-        getSavedMovies();
-      }
-    }
-    },[location.pathname])
-
-  React.useEffect(() => {
     getCurrentUser();
     document.title = "Movies Project";
   }, [location.pathname, isLoginIn])
@@ -185,7 +190,7 @@ function App() {
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <NotificationPopup setIsClose={setIsClose} isClose={isClose}></NotificationPopup>
+        <NotificationPopup popupText={popupText} setIsClose={setIsClose} isClose={isClose}></NotificationPopup>
         <Routes>
           <Route path="*" element={<NotFound linkText="Назад" code="404" text='Ничего не найдено'/>}/>
           <Route path="/" element={<Main isLoginIn={isLoginIn} openSideBar={openSideBar} closeSideBar={closeSideBar} isOpen={isOpen}/>}/>
@@ -215,6 +220,7 @@ function App() {
                     setAuthError={setAuthError}
                     authError={authError}
                     login={login}
+                    setIsBlockReq={setIsBlockReq}
                     isBlockReq={isBlockReq}
                   />
                 }

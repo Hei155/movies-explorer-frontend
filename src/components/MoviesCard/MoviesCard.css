@@ -3,6 +3,8 @@
     height: auto;
     position: relative;
     max-width: 511.5px;
+    justify-self: center;
+    width: 100%;
 }
 
 .card_hidden {

@@ -1,15 +1,12 @@
 import React from "react"
 
 export function MoviesCard(props) {
-    const [activeClass, setIsActiveClass] = React.useState(false)
 
     function handleClick() {
-        if (props.isActive || activeClass) {
+        if (props.isActive) {
             props.deleteFavouriteMovie(props.data, props.movieSavedList.find((savedMovie) => savedMovie.movieId === props.data.movieId)._id);
-            setIsActiveClass(false);
         } else {
             props.setFavouriteStatus(props.data)
-            setIsActiveClass(true);
         }
     }
 
@@ -24,7 +21,7 @@ export function MoviesCard(props) {
             </a>
             <div className="card__container">
                 <p className="card__about">{props.text}</p>
-                <button className={(props.toggleBtnClass === 'toggle__select-delete') ? 'toggle__select toggle__select_delete' : (activeClass || props.isActive ? "toggle__select toggle__select_active" : "toggle__select")} alt="Избранное" onClick={(props.toggleBtnClass === 'toggle__select-delete') ? handleClickDelete : handleClick}/>
+                <button className={(props.toggleBtnClass === 'toggle__select-delete') ? 'toggle__select toggle__select_delete' : (props.isActive ? "toggle__select toggle__select_active" : "toggle__select")} alt="Избранное" onClick={(props.toggleBtnClass === 'toggle__select-delete') ? handleClickDelete : handleClick}/>
             </div>
             <p className="card__duration">{props.duration}</p>
         </div>

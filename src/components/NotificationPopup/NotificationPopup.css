@@ -12,6 +12,7 @@
     transition: background-color ease-in-out .5s,
                 visibility ease-in-out .5s,
                 opacity ease-in-out .5s;
+    z-index: 20;
 }
 
 .popup_open {

@@ -6,19 +6,12 @@ import { CurrentUserContext } from '../../contexts/currentUserContext';
 
 export function Profile(props) {
     const [isChange, setIsChange] = React.useState(false);
-    const { values, handleClick, resetForm, handleChange, errors, isValid } = UseForm();
+    const { nameProfile, emailProfile, values, resetForm, handleChange, handleProfileChange, nameError, emailError, errors, isValid } = UseForm();
     const currentUser = React.useContext(CurrentUserContext);
-
-    function checkClass() {
-        if (isValid) {
-            return true;
-        }
-        return '';
-    }
 
     function handleSubmit(evt) {
         evt.preventDefault();
-        props.updateUserInfo(values.email, values.name);
+        props.updateUserInfo(emailProfile, nameProfile);
         setIsChange(true);
     }
 
@@ -28,6 +21,9 @@ export function Profile(props) {
         localStorage.removeItem('movies');
         localStorage.removeItem('savedMovies');
         localStorage.removeItem("movieName");
+        localStorage.removeItem('isMovieShort')
+        localStorage.removeItem("savedMovieName");
+        localStorage.removeItem('isSavedMovieShort');
     }
 
     return (
@@ -39,13 +35,13 @@ export function Profile(props) {
                 <form className="profile__form" onSubmit={handleSubmit}>
                     <label className="profile__field">
                         <span className="profile__text">Имя</span>
-                        <input className="profile__input" name="name" type="name" onClick={handleClick} onChange={handleChange} minLength={3} value={values.name || currentUser.name || ''}/>                                          
+                        <input className="profile__input" name="name" type="name" onChange={handleProfileChange} required minLength={3} value={nameProfile || ''}/>                                          
                     </label>
                     <label className="profile__field">
                         <span className="profile__text">Email</span>
-                        <input className="profile__input" name="email" type="email" onChange={handleChange} minLength={3} value={values.email || currentUser.email || ''}/>
+                        <input className="profile__input" name="email" type="email" onChange={handleProfileChange} required pattern="[A-Z0-9a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" minLength={3} value={emailProfile || ''}/>
                     </label>
-                    <span className='profile__error'>{errors.name || errors.email}</span>
+                    <span className='profile__error'>{nameError || emailError}</span>
                     <button className={isValid ? "profile__submit" : "profile__submit profile__sibmit_inactive"} disabled={isValid || isChange ? '' : true} type="submit">Редактировать</button>
                 </form>
                 <button className="profile__signout" onClick={handleSignOut}>Выйти из аккаунта</button>

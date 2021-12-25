@@ -15,7 +15,7 @@ export function NotificationPopup(props) {
         <section className={props.isClose ? 'popup' : 'popup popup_open'} onClick={handleCloseOnArea}>
             <div className="popup__container">
                 <button className="popup__close" onClick={handleClose}/>
-                <span className="popup__text">Вы успешно зарегистрировались!</span>
+                <span className="popup__text">Вы успешно {props.popupText}!</span>
             </div>
         </section>
     )

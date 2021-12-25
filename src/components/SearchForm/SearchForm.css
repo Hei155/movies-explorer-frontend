@@ -22,19 +22,7 @@
     line-height: 34px;
     color: #8B8B8B;
     background: #202020;
-}
-
-.searchcontainer__error {
-    display: block;
-    visibility: visible;
-    font-weight: normal;
-    font-size: 10px;
-    height: 13px;
-    color: #EE3465;
-}
-
-.searchcontainer__error_hidden {
-    visibility: hidden;
+    padding-bottom: 13px;
 }
 
 .searchcontainer__button {

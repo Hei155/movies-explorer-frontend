@@ -4,22 +4,29 @@ import { moviesApiBaseUrl} from "./const";
 class MainApi {
     constructor(options) {
         this._baseUrl = options.baseUrl;
-        this._headers = options.headers;
         this._moviesApiBaseUrl =  moviesApiBaseUrl;
     }
 
-    getFavouritesMovie() {
+    getFavouritesMovie(token) {
         return fetch(`${this._baseUrl}/movies`, {
             method: 'GET',
-            headers: this._headers
+            headers: {
+                'authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
         })
         .then(res => this._handleResponse(res))
     }
 
-    setFavouriteMovie(data) {
+    setFavouriteMovie(data, token) {
             return fetch (`${this._baseUrl}/movies`, {
                 method: 'POST',
-                headers: this._headers,
+                headers: {
+                    'authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({
                     country: data.country,
                     director: data.director,
@@ -39,21 +46,25 @@ class MainApi {
             })
     }
 
-    deleteFavouriteMovie(id) {
+    deleteFavouriteMovie(id, token) {
         return fetch (`${this._baseUrl}/movies/${id}`, {
             method: 'DELETE',
-            headers: this._headers,
+            headers: {
+                'authorization': `Bearer ${token}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
         })
         .then((res) => {
             this._handleResponse(res)
         })
     }
 
-    getUserData() {
+    getUserData(token) {
         return fetch(`${this._baseUrl}/users/me`, {
             method: 'GET',
             headers: {
-                'authorization': `Bearer ${localStorage.getItem('jwt')}`,
+                'authorization': `Bearer ${token}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
@@ -72,11 +83,6 @@ class MainApi {
 
 const mainApi = new MainApi({
     baseUrl: mainApiBaseUrl,
-    headers: {
-        'authorization': `Bearer ${localStorage.getItem('jwt')}`,
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    }
 });
 
 export default mainApi;
