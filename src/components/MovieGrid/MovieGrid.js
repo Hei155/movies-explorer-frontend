@@ -4,10 +4,11 @@ import { MoviesCardList } from "../MoviesCardList/MoviesCardList";
 import { movieNumber, extendMovieNumber } from "../../utils/const";
 
 export function MovieGrid(props) {
-    const isBigger = useMediaQuery({ query: `(min-width: 1280px)` })
-    const isBigWindow = useMediaQuery({ query: `(min-width: 910px) and (max-width: 1279px)` })
-    const isSmallWindow = useMediaQuery({ query: `(min-width: 630px) and (max-width: 909px)` })
-    const isMobile = useMediaQuery({ query: `(max-width: 629px)` })
+    const isBigger = useMediaQuery({ query: `(min-width: 1280px)` });
+    const isBigWindow = useMediaQuery({ query: `(min-width: 910px) and (max-width: 1279px)` });
+    const isSmallWindow = useMediaQuery({ query: `(min-width: 630px) and (max-width: 909px)` });
+    const isMobile = useMediaQuery({ query: `(max-width: 629px)` });
+    const [isJustLeftContent, setIsJustLeftContent] = React.useState(false);
 
     function checkMaxCard() {
         if (isBigWindow) {
@@ -48,8 +49,18 @@ export function MovieGrid(props) {
     React.useEffect(() => {
         if (props.isShort) {
             checkBtnVisible(props.shortMovies);
+            if (props.shortMovies.length < 4) {
+                setIsJustLeftContent(true);
+            } else {
+                setIsJustLeftContent(false);
+            }
         } else {
             checkBtnVisible(props.movies)
+            if (props.movies.length < 4) {
+                setIsJustLeftContent(true);
+            } else {
+                setIsJustLeftContent(false);
+            }
         }
     },[props.movies, props.shortMovies, maxCards, props.isShort])
 
@@ -70,7 +81,7 @@ export function MovieGrid(props) {
 
     return (
         <>
-            <div className="movies">
+            <div className={isJustLeftContent && isBigger ? 'movies movies_start' : 'movies'}>
             <MoviesCardList setIsEmpty={props.setIsEmpty} deleteFavouriteMovie={props.deleteFavouriteMovie} movieSavedList={props.movieSavedList}setFavouriteStatus={props.setFavouriteStatus} isShort={props.isShort} isFavourite={props.isFavourite} handleClick={props.handleClick} maxCards={maxCards} toggleBtnClass={props.toggleBtnClass} data={props.data} checkCurrentCards={props.checkCurrentCards}></MoviesCardList>
             </div>
             <button className={isVisible ? "movies__btn movies__btn_hidden" : "movies__btn"} onClick={extendMovieList}>Ещё</button>

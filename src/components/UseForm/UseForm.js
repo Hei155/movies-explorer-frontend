@@ -1,18 +1,20 @@
 import React from "react";
 import { useCallback } from "react";
 import { CurrentUserContext } from "../../contexts/currentUserContext";
-import { useLocation } from "react-router-dom";
 
 export default function UseForm() {
     const currentUser = React.useContext(CurrentUserContext);
-    const location = useLocation();
     const [nameProfile, setNameProfile] = React.useState(currentUser.name);
     const [emailProfile, setEmailProfile] = React.useState(currentUser.email);
     const [nameError, setNameError] = React.useState('');
     const [emailError, setEmailError] = React.useState('');
     const [values, setValues] = React.useState({});
     const [errors, setErrors] = React.useState({});
-    const [isValid, setIsValid] = React.useState(false)
+    const [isValid, setIsValid] = React.useState(false);
+    React.useEffect(() => {
+        setEmailProfile(currentUser.email);
+        setNameProfile(currentUser.name)
+    },[currentUser])
     const handleProfileChange = (event) => {
         if (event.target.name === 'name') {
             setNameProfile(event.target.value);

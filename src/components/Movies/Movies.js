@@ -6,6 +6,7 @@ export function Movies(props) {
     const [isShort, setShort] = React.useState(localStorage.getItem('isMovieShort') || false);
     const [isEmpty, setIsEmpty] = React.useState(false);
     const [movieName, setMovieName] = React.useState(localStorage.getItem("movieName") || false);
+    const [currentName, setCurrentName] = React.useState(localStorage.getItem("movieCurrentName"));
     const [movies, setMovies] = React.useState([]);
     const [shortMovies, setShortMovies] = React.useState([]);
     function handleChange(evt) {
@@ -15,13 +16,13 @@ export function Movies(props) {
 
     function handleSubmit(event) {
         event.preventDefault();
+        setCurrentName(movieName);
+        localStorage.setItem("movieCurrentName", movieName);
         if (movieName) {
             if (isShort) {
                 setShortMovies(props.movieList.filter((movie) => (movie.duration <= shortMovieDuration && movie.nameRU.toLowerCase().includes(movieName.toLowerCase()))));
-                localStorage.setItem('movies', JSON.stringify(props.movieList.filter((movie) => (movie.duration <= shortMovieDuration && movie.nameRU.toLowerCase().includes(movieName.toLowerCase())))));
             } else {
                 setMovies(props.movieList.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase())));
-                localStorage.setItem('movies', JSON.stringify(props.movieList.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase()))));      
             }
         } else {
             props.getMovies();
@@ -32,13 +33,13 @@ export function Movies(props) {
         if (isShort) {
             setShort(false);
             if (movieName) {
-                setMovies(movies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase())));
+                setMovies(props.movieList.filter((movie) => movie.nameRU.toLowerCase().includes(currentName.toLowerCase())));
             }
             localStorage.removeItem('isMovieShort');
         } else {
             setShort(true);
             if (movieName) {
-                setShortMovies(shortMovies.filter((movie) => movie.nameRU.toLowerCase().includes(movieName.toLowerCase())));
+                setShortMovies(props.movieList.filter((movie) => (movie.duration <= shortMovieDuration && movie.nameRU.toLowerCase().includes(currentName.toLowerCase()))));
             }
             localStorage.setItem('isMovieShort', true);
         }
@@ -54,6 +55,19 @@ export function Movies(props) {
     React.useEffect(() => {
         setMovies(props.movieList);
         setShortMovies(props.movieList.filter((movie) => movie.duration <= shortMovieDuration));
+        if (isShort) {
+            if (currentName) {
+                setShortMovies(props.movieList.filter((movie) => (movie.duration <= shortMovieDuration && movie.nameRU.toLowerCase().includes(currentName.toLowerCase()))));
+            } else {
+                setShortMovies(props.movieList.filter((movie) => movie.duration <= shortMovieDuration));
+            }
+        } else {
+            if (currentName) {
+                setMovies(props.movieList.filter((movie) => movie.nameRU.toLowerCase().includes(currentName.toLowerCase())));
+            } else {
+                setMovies(props.movieList);
+            } 
+        }
     }, [props.movieList])
 
     React.useEffect(() => {
@@ -63,6 +77,7 @@ export function Movies(props) {
             setIsEmpty(false)
         }
     }, [shortMovies, movies, isShort])
+    
     return (  
         <MoviesFrame
                 movieName={movieName}

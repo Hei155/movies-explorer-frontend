@@ -5,9 +5,14 @@
     margin: 0 auto;
     padding-bottom: 30px;
     padding-top: 70px;
-    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, 270px);
     gap: 32px 20px;
     
+}
+
+.movies_start {
+    justify-content: flex-start;
 }
 
 .movies__btn {
@@ -40,6 +45,7 @@
 
 @media screen and (max-width: 909px) {
     .movies {
+        grid-template-columns: repeat(auto-fit, 330px);
         gap: 36px 30px;
     }
     .movies__btn {
@@ -49,6 +55,7 @@
 
 @media screen and (max-width: 560px) {
     .movies {
+        grid-template-columns: repeat(auto-fit, 300px);
         padding-top: 40px;
         padding-bottom: 30px;
         gap: 20px;

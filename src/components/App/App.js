@@ -28,6 +28,8 @@ function App() {
   const [isBlockReq, setIsBlockReq] = React.useState(false);
   const [isClose, setIsClose] = React.useState(true);
   const [popupText, setPopupText] = React.useState('');
+  const [isBlockOnError, setIsBlockOnError] = React.useState(false);
+  
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -92,7 +94,6 @@ function App() {
 
   function login(email, password, popupStatus='авторизовались!') {
     setIsBlockReq(true);
-    console.log(isBlockReq)
     auth.authorize(email, password)
       .then(() => {
         setIsLoginIn(true);
@@ -105,9 +106,10 @@ function App() {
         checkToken();
       })
       .catch((err) => {
+        setIsBlockOnError(true);
         setIsBlockReq(false);
         console.log(err)
-        setAuthError('Что-то пошло не так...')
+        setAuthError('Что-то пошло не так...');
       })
   }
 
@@ -119,9 +121,10 @@ function App() {
         login(email, password, popupStatus);
       })
       .catch((err) => {
+        setIsBlockOnError(true);
         setIsBlockReq(false);
         console.log(err);
-        setAuthError('Что-то пошло не так...')
+        setAuthError('Что-то пошло не так...');
       })
   }
 
@@ -129,13 +132,17 @@ function App() {
     setIsBlockReq(true);
     auth.updateUser(email, name)
     .then(() => {
+      mainApi.getUserData(localStorage.getItem('jwt'))
+        .then(res => setCurrentUser(res))
       setPopupText('обновили свои данные');
       setIsClose(false);
       setIsBlockReq(false);
     })
     .catch((err) => {
+      setIsBlockOnError(true);
       setIsBlockReq(false);
-      console.log(err)
+      console.log(err);
+      setAuthError('Что-то пошло не так...');
   })
   }
 
@@ -179,6 +186,13 @@ function App() {
   }
 
   React.useEffect(() => {
+    if (localStorage.getItem('jwt')) {
+        getCurrentUser();
+        checkToken();
+    }
+  },[])
+
+  React.useEffect(() => {
     getCurrentUser();
     document.title = "Movies Project";
   }, [location.pathname, isLoginIn])
@@ -201,6 +215,8 @@ function App() {
                 isLoginIn={!isLoginIn}
                 children={
                   !isLoginIn && <Register
+                    isBlockOnError={isBlockOnError}
+                    setIsBlockOnError={setIsBlockOnError}
                     setAuthError={setAuthError}
                     authError={authError}
                     register={register}
@@ -217,6 +233,8 @@ function App() {
                 isLoginIn={!isLoginIn}
                 children={
                   !isLoginIn && <Login
+                    isBlockOnError={isBlockOnError}
+                    setIsBlockOnError={setIsBlockOnError}
                     setAuthError={setAuthError}
                     authError={authError}
                     login={login}
@@ -234,6 +252,10 @@ function App() {
                 isLoginIn={isLoginIn}
                 children={
                   isLoginIn && <Profile
+                    isBlockOnError={isBlockOnError}
+                    setIsBlockOnError={setIsBlockOnError}
+                    setAuthError={setAuthError}
+                    authError={authError}
                     isBlockReq={isBlockReq}
                     updateUserInfo={updateUserInfo}
                     isLoginIn={isLoginIn}

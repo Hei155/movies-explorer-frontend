@@ -8,8 +8,8 @@ export function Login(props) {
     const { values, handleChange, errors, isValid } = UseForm();
 
     function checkBtn() {
-        if (isValid && !props.isBlockReq) {
-            props.setAuthError('')
+        if (isValid && !props.isBlockReq && !props.isBlockOnError) {
+            props.setAuthError('');
             setBtnActive(true);
             setBtnClassName('auth__submit');
         } else {
@@ -25,10 +25,16 @@ export function Login(props) {
 
     React.useEffect(() => {
         checkBtn();
+    }, [values, props.isBlockOnError])
+
+    React.useEffect(() => {
+        props.setIsBlockOnError(false);
     }, [values])
 
     return (
         <AuthFrame
+            isBlockOnError={props.isBlockOnError}
+            setIsBlockOnError={props.setIsBlockOnError}
             isBlockReq={props.isBlockReq}
             authError={props.authError}
             onSubmit={onSubmit}

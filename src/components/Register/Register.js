@@ -8,7 +8,7 @@ export function Register(props) {
     const { values, handleChange, errors, isValid } = UseForm();
 
     function checkBtn() {
-        if (isValid && !props.isBlockReq) {
+        if (isValid && !props.isBlockReq && !props.isBlockOnError) {
             props.setAuthError('')
             setBtnActive(true);
             setBtnClassName('auth__submit');
@@ -25,8 +25,11 @@ export function Register(props) {
 
     React.useEffect(() => {
         checkBtn();
-    }, [values])
+    }, [values, props.isBlockOnError])
 
+    React.useEffect(() => {
+        props.setIsBlockOnError(false);
+    }, [values])
 
     return (
         <AuthFrame
@@ -45,7 +48,7 @@ export function Register(props) {
         >
             <label className="register__field">
                 <span className="register__text">Имя</span>
-                <input className="register__input" name="name" type="text" minLength={3} maxLength={30} onChange={handleChange}/>
+                <input className="register__input" disabled={!props.isBlockReq ? '' : true} name="name" type="text" minLength={3} maxLength={30} onChange={handleChange}/>
             </label>
         </AuthFrame>
     )
